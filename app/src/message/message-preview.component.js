@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { http, me, router, util } from "/core";
+import { http, router, util, me } from "/core";
 import { FaIcon } from "/misc";
 
 export default class MessagePreview extends Component {
@@ -45,7 +45,7 @@ export default class MessagePreview extends Component {
     return (
       <a
         class="d-inline-block seamless-link message-preview unselectable"
-        href={router.toApp(`/messages/${this.props.message.id}`)}
+        href={util.toApp(`/messages/${this.props.message.id}`)}
         onClick={e => router.onClick(e)}
         title={this.props.message.data["title"]}
       >

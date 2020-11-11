@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { router, lang, me, util } from "/core";
+import { router, lang, util, me } from "/core";
 import { FaIcon } from "/misc";
 
 export default function MessageFooter() {
@@ -23,10 +23,8 @@ export default function MessageFooter() {
           <Fragment>
             <a
               class="action seamless-link font-size-90 capitalize"
-              href={router.toApp(
-                `/messages/${ 
-                    this.props.message.id 
-                    }${this.props.message.children.length ? "" : "?focus=reply"}`
+              href={util.toApp(
+                `/messages/${this.props.message.id}${this.props.message.children.length ? "" : "?focus=reply"}`
               )}
               onClick={e => router.onClick(e)}
             >
@@ -92,7 +90,7 @@ export default function MessageFooter() {
                   {lang.t("public_link")}
                 </a>
               }
-              {me.me.groups.length > 1 && (
+              {me.groups?.length > 1 && (
                 <a
                   class="seamless-link capitalize"
                   onClick={e => this.props.shareMessage(e)}

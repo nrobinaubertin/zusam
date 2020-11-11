@@ -1,7 +1,8 @@
 import { h, Component, Fragment } from "preact";
-import { http, lang, me, router, util } from "/core";
+import { http, lang, router, util } from "/core";
+import { connectStoreon } from 'storeon/preact';
 
-export default class Notification extends Component {
+class Notification extends Component {
   constructor(props) {
     super(props);
     this.getMiniature = this.getMiniature.bind(this);
@@ -163,11 +164,11 @@ export default class Notification extends Component {
     return (
       <a
         class="notification seamless-link unselectable"
-        href={router.toApp(this.state.target)}
+        href={util.toApp(this.state.target)}
         title={this.state.title}
         onClick={e => {
           e.preventDefault();
-          me.removeMatchingNotifications(this.props.id).then(() =>
+          this.props.me.removeMatchingNotifications(this.props.id).then(() =>
             router.onClick(e, false, this.state.target)
           );
         }}
@@ -191,3 +192,5 @@ export default class Notification extends Component {
     );
   }
 }
+
+export default connectStoreon('me', Notification);

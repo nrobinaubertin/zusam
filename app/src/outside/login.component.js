@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { lang, me, alert, storage, http, router } from "/core";
+import { lang, alert, storage, http, router, me } from "/core";
 import zusam_logo from "/assets/zusam_logo.svg";
 
 export default class Login extends Component {

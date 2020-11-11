@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { lang, me, router, util, http } from "/core";
+import { lang, router, util, http, me } from "/core";
 import { MessageSearchResult } from "/message";
 
 export default class GroupSearch extends Component {
@@ -18,8 +18,8 @@ export default class GroupSearch extends Component {
   }
 
   getGroupName() {
-    if (me.me.groups && router.entity.entityType == "group") {
-      let group = me.me.groups.find(g => g["id"] == util.getId(router.entity));
+    if (this.props.me.groups && router.entity.entityType == "group") {
+      let group = this.props.me.groups.find(g => g["id"] == util.getId(router.entity));
       return group ? group["name"] : "";
     }
     return "";
@@ -61,10 +61,10 @@ export default class GroupSearch extends Component {
       Array.isArray(this.state.messages) && (
         <div>
           <a
-            href={router.toApp(`/groups/${  util.getGroupId()}`)}
+            href={util.toApp(`/groups/${me.getGroupId()}`)}
             onClick={e => router.onClick(e)}
           >
-            <div class="group-name no-decoration">{util.getGroupName()}</div>
+            <div class="group-name no-decoration">{me.getGroupName()}</div>
           </a>
           <article id="group" class="justify-content-center d-flex">
             <div class="search-results-container container-fluid d-flex justify-content-center flex-wrap">

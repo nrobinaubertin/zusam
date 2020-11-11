@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { util, router } from "/core";
+import { util } from "/core";
 import TwitchEmbed from "./embeds/twitch-embed.component.js";
 import BandCampEmbed from "./embeds/bandcamp-embed.component.js";
 import GenericEmbed from "./embeds/generic-embed.component.js";
@@ -148,7 +148,7 @@ export default class EmbedBlock extends Component {
         <div class="container d-flex justify-content-center flex-wrap align-items-center">
           <img
             data-nlg={!this.props.inWriter}
-            href={router.toApp(this.props.url)}
+            href={util.toApp(this.props.url)}
             class="img-fluid cursor-pointer"
             data-origin={this.props.url}
             data-src={
@@ -190,7 +190,7 @@ export default class EmbedBlock extends Component {
           class="preview-card seamless-link d-inline-block"
           target="_blank"
           rel="noreferrer"
-          href={router.toApp(this.props.url)}
+          href={util.toApp(this.props.url)}
         >
           <div class="card" style="max-width: 480px">
             {this.props.preview && (

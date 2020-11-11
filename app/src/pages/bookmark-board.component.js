@@ -1,6 +1,7 @@
 import { h, Component } from "preact";
-import { http, me, lang, router } from "/core";
+import { util, http, lang, router, me } from "/core";
 import { MessagePreview } from "/message";
+import store from "/store";
 
 export default class BookmarkBoard extends Component {
 
@@ -10,8 +11,9 @@ export default class BookmarkBoard extends Component {
       messages: [],
     }
     this.loadBookmarks = this.loadBookmarks.bind(this);
-    // force update the navbar when me gets updated
-    addEventListener("meStateChange", () => this.loadBookmarks());
+    store.on('@change', () => {
+      this.loadBookmarks();
+    })
   }
 
   loadBookmarks() {
@@ -33,7 +35,7 @@ export default class BookmarkBoard extends Component {
     return (
       <div>
         <a
-          href={router.toApp("/bookmarks")}
+          href={util.toApp("/bookmarks")}
           onClick={e => router.onClick(e)}
           class="no-decoration"
         >
@@ -41,17 +43,15 @@ export default class BookmarkBoard extends Component {
         </a>
         <article id="group" class="justify-content-center d-flex">
           <div class="message-container container-fluid d-flex justify-content-center flex-wrap">
-            {this.state.messages.map((msg, i) => {
-              if (msg && msg["id"]) {
-                return (
-                  <MessagePreview
-                    tabindex={i + 1}
-                    key={msg.id}
-                    message={msg}
-                    groupId={msg.group.id}
-                  />
-                );
-              }
+            {this.state.messages.filter(m => m?.id).map((msg, i) => {
+              return (
+                <MessagePreview
+                  tabindex={i + 1}
+                  key={msg.id}
+                  message={msg}
+                  groupId={msg.group.id}
+                />
+              );
             })}
           </div>
         </article>

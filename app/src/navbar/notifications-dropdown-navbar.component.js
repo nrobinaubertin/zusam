@@ -1,20 +1,18 @@
 import { h, Component } from "preact";
-import { lang, me, http } from "/core";
+import { lang, http, me } from "/core";
 import { FaIcon } from "/misc";
 import { Notification } from "/pages";
 
 export default class NotificationsDropdownNavbar extends Component {
   constructor(props) {
     super(props);
-    // force update the navbar when me gets updated
-    addEventListener("meStateChange", () => this.setState({}));
     this.clearAllNotifications = this.clearAllNotifications.bind(this);
   }
 
   clearAllNotifications() {
-    if (me.me.notifications.length) {
+    if (me.notifications.length) {
       Promise.all(
-        me.me.notifications.map(n => http.delete(`/api/notifications/${  n.id}`))
+        me.notifications.map(n => http.delete(`/api/notifications/${n.id}`))
       ).then(me.update());
     }
   }
@@ -28,17 +26,17 @@ export default class NotificationsDropdownNavbar extends Component {
         title={lang.t('notifications')}
         tabindex="-1"
         onClick={e =>
-          me.me.notifications.length &&
+          me.notifications.length &&
           e.currentTarget.classList.toggle("active")
         }
       >
         <div class="unselectable button-with-count">
           <FaIcon
-            family={me.me.notifications.length ? "solid" : "regular"}
+            family={me.notifications.length ? "solid" : "regular"}
             icon={"bell"}
           />
-          {!!me.me.notifications.length && (
-            <span class="badge-count">{me.me.notifications.length}</span>
+          {!!me.notifications.length && (
+            <span class="badge-count">{me.notifications.length}</span>
           )}
         </div>
         <div class="dropdown-menu dropdown-right notifications-menu">
@@ -51,8 +49,8 @@ export default class NotificationsDropdownNavbar extends Component {
               {lang.t("mark_all_as_read")}
             </div>
           </div>
-          {me.me && Array.isArray(me.me.notifications) && me.me.notifications.length && (
-            me.me.notifications.sort((a, b) => b.createdAt - a.createdAt).map(e => <Notification key={e.id} {...e} />)
+          {me.notifications?.length && (
+            me.notifications.sort((a, b) => b.createdAt - a.createdAt).map(e => <Notification key={e.id} {...e} />)
           )}
         </div>
       </div>

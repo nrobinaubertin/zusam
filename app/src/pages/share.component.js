@@ -1,8 +1,9 @@
 import { h, Component } from "preact";
 import { lang, me, router, http } from "/core";
 import Writer from "/message/writer.component.js";
+import { connectStoreon } from "storeon/preact";
 
-export default class Share extends Component {
+class Share extends Component {
   constructor() {
     super();
     let currentUrl = new URL(window.location);
@@ -20,47 +21,58 @@ export default class Share extends Component {
   }
 
   componentDidMount() {
-    me.get().then(user => {
-      if (user.data["default_group"]) {
-        this.setState({ group: user.data["default_group"] });
-        router.backUrl = `/groups/${  user.data["default_group"]}`;
-      } else if (user.groups.length == 1) {
-          this.setState({ group: user.groups[0]["id"] });
-          router.backUrl = `/groups/${  user.groups[0]}`;
-        }
-      if (this.state.currentUrl.searchParams.get("message")) {
-        http
-          .get(
-            `/api/messages/${  this.state.currentUrl.searchParams.get("message")}`
-          )
-          .then(m => {
-            this.setState({
-              loaded: true,
-              title: (m && m.data.title) || "",
-              text: (m && m.data.text) || "",
-              url: "",
-              files: (m && m.files) || null
-            });
-          });
-      } else {
-        this.setState({ loaded: true });
+    // we want to load the component with informations fetched about the user
+    // BUT ONLY ONCE
+    const unbind = me.on("@changed", () => loadState());
+    let loadState = () => {
+      if (this.state.loaded == true) {
+        unbind();
+        return;
       }
-    });
+      let user = me.get();
+      if (user.loaded == true) {
+        if (user.data["default_group"]) {
+          this.setState({ group: user.data["default_group"] });
+          router.backUrl = `/groups/${user.data["default_group"]}`;
+        } else if (user.groups.length == 1) {
+            this.setState({ group: user.groups[0]["id"] });
+            router.backUrl = `/groups/${user.groups[0]}`;
+        }
+        if (this.state.currentUrl.searchParams.get("message")) {
+          http
+            .get(
+              `/api/messages/${  this.state.currentUrl.searchParams.get("message")}`
+            )
+            .then(m => {
+              this.setState({
+                loaded: true,
+                title: (m && m.data.title) || "",
+                text: (m && m.data.text) || "",
+                url: "",
+                files: (m && m.files) || null
+              });
+            });
+        } else {
+          this.setState({ loaded: true });
+        }
+        unbind();
+      }
+    }
   }
 
   groupSelect(e) {
     this.setState({ group: e.target.value });
-    router.backUrl = `/groups/${  e.target.value}`;
+    router.backUrl = `/groups/${e.target.value}`;
   }
 
   render() {
-    if (!this.state["loaded"]) {
+    if (!this.props.me.loaded) {
       return;
     }
     return (
       <article class="mt-2">
         <div class="container">
-          {!this.state.parent && me.me && me.me.groups.length > 1 && (
+          {this.state.parent && this.props.me && this.props.me.groups.length > 1 && (
             <div class="mb-1">
               <label class="px-1" for="group_share_choice">
                 {lang.t("group_share_choice")}
@@ -72,7 +84,7 @@ export default class Share extends Component {
                 onChange={e => this.groupSelect(e)}
                 required
               >
-                {me.me.groups.map(e => (
+                {this.props.me.groups.map(e => (
                   <option value={e["id"]}>{e.name}</option>
                 ))}
               </select>
@@ -109,3 +121,5 @@ export default class Share extends Component {
     );
   }
 }
+
+export default connectStoreon('me', Share)

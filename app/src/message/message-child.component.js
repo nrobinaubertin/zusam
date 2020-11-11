@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { me, router, util } from "/core";
+import { router, util, me } from "/core";
 import Message from "./message.component.js";
 
 export default class MessageChild extends Component {
@@ -36,14 +36,14 @@ export default class MessageChild extends Component {
         isChild={true}
         preMessageHeadComponent={
           this.state.edit &&
-          me.me && (
+          me.id && (
             <div class="message-head d-none d-md-block">
               <img
                 class="rounded-circle w-3 material-shadow avatar"
-                style={util.backgroundHash(me.me.id)}
+                style={util.backgroundHash(me.id)}
                 src={
-                  me.me.avatar
-                    ? util.crop(me.me.avatar["id"], 100, 100)
+                  me.avatar
+                    ? util.crop(me.avatar?.id, 100, 100)
                     : util.defaultAvatar
                 }
               />

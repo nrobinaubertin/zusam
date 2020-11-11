@@ -1,5 +1,5 @@
-import me from "./me.js";
 import http from "./http.js";
+import me from "./me.js";
 
 const lang = {
   dict: [], // dicts loaded for the current session
@@ -12,13 +12,12 @@ const lang = {
   getDefaultLang: () =>
     (document.querySelector("meta[name='zusam:default-lang']") || {}).content ||
     "en",
-  getCurrentLang: () =>
-    me.me && me.me["data"]
-      ? me.me.data["lang"] || lang.getDefaultLang()
+  getCurrentLang: () => me.data
+      ? me.data["lang"] || lang.getDefaultLang()
       : lang.getDefaultLang(),
   fetchDict: (dict = lang.getCurrentLang()) =>
     !lang.dict[dict] &&
-    http.get(`/lang/${  dict  }.json`).then(r => {
+    http.get(`/lang/${dict}.json`).then(r => {
       lang.dict[dict] = r;
       window.dispatchEvent(new CustomEvent("fetchedNewDict"));
     }),

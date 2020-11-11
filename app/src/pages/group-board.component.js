@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { http, router, util } from "/core";
+import { http, router, util, me } from "/core";
 import { MessagePreview } from "/message";
 import { GroupTitle } from "/pages";
 
@@ -97,9 +97,9 @@ export default class GroupBoard extends Component {
       Array.isArray(this.state.messages) && (
         <div>
           <GroupTitle
-            key={util.getGroupId()}
-            id={util.getGroupId()}
-            name={util.getGroupName()}
+            key={me.getGroupId()}
+            id={me.getGroupId()}
+            name={me.getGroupName()}
           />
           <article id="group" class="justify-content-center d-flex">
             <div class="message-container container-fluid d-flex justify-content-center flex-wrap">

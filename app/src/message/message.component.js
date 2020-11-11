@@ -1,5 +1,5 @@
 import { Fragment, h, Component } from "preact";
-import { lang, http, me, router, util } from "/core";
+import { lang, http, router, util, me } from "/core";
 import MessageChildren from "./message-children.component.js";
 import MessageHead from "./message-head.component.js";
 import MessageFooter from "./message-footer.component.js";
@@ -71,7 +71,7 @@ export default class Message extends Component {
 
   shareMessage(event) {
     event.preventDefault();
-    router.navigate(`/share?message=${  this.props.message.id}`);
+    router.navigate(`/share?message=${this.props.message.id}`);
   }
 
   editMessage(event) {
@@ -81,7 +81,7 @@ export default class Message extends Component {
 
   publishInGroup() {
     http
-      .put(`/api/messages/${  this.props.message.id}`, {
+      .put(`/api/messages/${this.props.message.id}`, {
         lastActivityDate: Math.floor(Date.now() / 1000),
         isInFront: true
       })
@@ -90,7 +90,7 @@ export default class Message extends Component {
           alert.add(lang.t("error"), "alert-danger");
           return;
         }
-        router.navigate(`/groups/${  this.props.message.group.id}`);
+        router.navigate(`/groups/${this.props.message.group.id}`);
       });
   }
 
@@ -166,14 +166,14 @@ export default class Message extends Component {
         )}
         {!this.state.edit && !this.props.isPublic && !this.props.isChild && (
           <div class="message child mt-2">
-            {me.me && (
+            {me.id && (
               <div class="message-head d-none d-md-block">
                 <img
                   class="rounded-circle w-3 material-shadow avatar"
-                  style={util.backgroundHash(me.me.id)}
+                  style={util.backgroundHash(me.id)}
                   src={
-                    me.me.avatar
-                      ? util.crop(me.me.avatar["id"], 100, 100)
+                    me.avatar
+                      ? util.crop(me.avatar["id"], 100, 100)
                       : util.defaultAvatar
                   }
                 />

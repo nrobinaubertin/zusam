@@ -1,8 +1,8 @@
+import lang from "./lang.js";
+import util from "./util.js";
+import storage from "./storage.js";
 import http from "./http.js";
 import me from "./me.js";
-import util from "./util.js";
-import lang from "./lang.js";
-import storage from "./storage.js";
 
 const router = {
   route: "",
@@ -33,7 +33,7 @@ const router = {
     return location.origin + router.getSubpath() + router.removeSubpath(url);
   },
   removeSubpath: path =>
-    path ? path.replace(new RegExp(`^${  router.getSubpath()}`), "") : "",
+    path ? path.replace(new RegExp(`^${util.getSubpath()}`), "") : "",
   getParam: (param, searchParams = window.location.search.substring(1)) => {
     let res = searchParams.split("&").find(e => e.split("=")[0] === param);
     return res ? decodeURIComponent(res.split("=")[1]) : "";
@@ -75,7 +75,7 @@ const router = {
   },
   navigate: async (url = "/", options = {}) => {
     if (!url.match(/^http/) && !options["raw_url"]) {
-      url = router.toApp(url);
+      url = util.toApp(url);
     }
     let components = router.getUrlComponents(url);
     // do not allow to renavigate to the same url. This is done to avoid accidental navigate locks
@@ -131,6 +131,7 @@ const router = {
       router.entity = null;
     }
 
+
     switch (router.route) {
       case "login":
         storage.reset();
@@ -152,32 +153,32 @@ const router = {
         window.dispatchEvent(new CustomEvent("routerStateChange"));
         break;
       case "logout":
-        util.logout();
+        router.logout();
         break;
       case "invitation":
         storage.get("apiKey").then(apiKey => {
           if (apiKey) {
-            http.post(`/api/groups/invitation/${  router.id}`, {}).then(() => {
+            http.post(`/api/groups/invitation/${router.id}`, {}).then(() => {
               window.location.href = window.location.origin;
             });
           } else {
-            router.navigate(`/signup?inviteKey=${  router.id}`);
+            router.navigate(`/signup?inviteKey=${router.id}`);
           }
         });
         break;
       default:
-        me.get().then(user => {
+        me.fetch().then(user => {
           if (!user) {
             router.navigate("/login");
             return;
           }
-          if (user.data["default_group"]) {
-            router.navigate(`/groups/${  user.data["default_group"]}`);
+          if (user.data?.default_group) {
+            router.navigate(`/groups/${user.data["default_group"]}`);
           } else if (user.groups[0]) {
-              router.navigate(`/groups/${  user.groups[0].id}`);
-            } else {
-              window.location = "/create-group";
-            }
+            router.navigate(`/groups/${user.groups[0].id}`);
+          } else {
+            window.location = "/create-group";
+          }
         });
     }
   },
@@ -230,6 +231,10 @@ const router = {
     } else {
       router.navigate(url);
     }
+  },
+  logout: () => {
+    storage.reset();
+    window.location.href = window.location.origin;
   }
 };
 export default router;

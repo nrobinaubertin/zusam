@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { me, util } from "/core";
+import { util, me } from "/core";
 import Message from "./message.component.js";
 
 export default class MessageParent extends Component {
@@ -19,7 +19,7 @@ export default class MessageParent extends Component {
     const newMsg = event.detail;
     let msg = this.state.message;
     if (newMsg.parent && util.getId(newMsg.parent) == msg["id"]) {
-      newMsg.author = me.me;
+      newMsg.author = me.get();
       msg.children = [...msg.children, newMsg];
       this.setState(prevState => ({
         lastDisplayedChild: prevState.lastDisplayedChild + 1,

@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { http, me, router, util } from "/core";
+import { http, router, util, me } from "/core";
 import { FaIcon } from "/misc";
 
 export default class MessageSearchResult extends Component {
@@ -186,7 +186,7 @@ export default class MessageSearchResult extends Component {
     return (
       <a
         class="d-inline-block seamless-link message-preview unselectable"
-        href={router.toApp(this.getLink())}
+        href={util.toApp(this.getLink())}
         onClick={e => router.onClick(e)}
         title={this.state.title}
       >

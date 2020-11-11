@@ -1,9 +1,29 @@
 import lang from "./lang.js";
-import router from "./router.js";
-import me from "./me.js";
-import storage from "./storage.js";
+
+// Stateless utilities
+// Should be agnostic of other components of zusam if possible
 
 const util = {
+  // check if the input is a valid URL
+  isValidUrl: url => {
+    try {
+      new URL(url);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  },
+  getSubpath: () => new URL(document.baseURI).pathname.replace(/\/$/, ""),
+  // toApp transforms an api url into an "app" url that the user can naviate to
+  toApp: url => {
+    if (!url || typeof url != "string") {
+      return "";
+    }
+    if (util.isValidUrl(url)) {
+      return url;
+    }
+    return location.origin + util.getSubpath() + url;
+  },
   // genId starts with a letter to be DOM friendly
   // seed can be used to order ids
   genId: seed => `z${seed || ""}-${Date.now().toString().slice(-5)}${Math.random().toString().slice(-5)}`,
@@ -49,21 +69,6 @@ const util = {
     }
     return util.humanFullDate(timestamp).split(" ")[0];
   },
-  getGroupId: () => {
-    if (me.me.groups) {
-      switch (router.entity.entityType) {
-        case "group":
-          return util.getId(router.entity);
-        case "message":
-          return util.getId(router.entity.group);
-      }
-    }
-    return "";
-  },
-  getGroupName: () => {
-    let group = me.me.groups.find(g => g["id"] == util.getGroupId());
-    return group ? group["name"] : "";
-  },
   // get the id of an object from an url
   getId: e => {
     switch (typeof e) {
@@ -83,12 +88,12 @@ const util = {
   // get the url to a thubmnail
   thumbnail: (id, width, height) =>
     typeof(id) == "string" && !id.startsWith("z")
-      ? router.toApp(`/api/images/thumbnail/${width}/${height}/${id}`)
+      ? util.toApp(`/api/images/thumbnail/${width}/${height}/${id}`)
       : null,
   // same as http.thumbnail but for a crop
   crop: (id, width, height) =>
     typeof(id) == "string" && !id.startsWith("z")
-      ? router.toApp(`/api/images/crop/${width}/${height}/${id}`)
+      ? util.toApp(`/api/images/crop/${width}/${height}/${id}`)
       : null,
   // default avatar in base64
   defaultAvatar:

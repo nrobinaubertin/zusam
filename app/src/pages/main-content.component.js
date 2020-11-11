@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { util, router } from "/core";
+import { util, router, me } from "/core";
 import { MessageParent } from "/message";
 import { CreateGroup, GroupTitle, GroupBoard, Share, BookmarkBoard } from "/pages";
 import { Settings } from "/settings";
@@ -30,9 +30,9 @@ export default function MainContent(props) {
         <article class="mb-3 justify-content-center d-flex">
           <div class="container pb-3">
             <GroupTitle
-              key={util.getGroupId()}
-              id={util.getGroupId()}
-              name={util.getGroupName()}
+              key={me.getGroupId()}
+              id={me.getGroupId()}
+              name={me.getGroupName()}
             />
             <MessageParent
               focus={!!router.getParam("focus", router.search)}
@@ -54,9 +54,9 @@ export default function MainContent(props) {
           <article class="mb-3">
             <div class="container pb-3">
               <GroupTitle
-                key={util.getGroupId()}
-                id={util.getGroupId()}
-                name={util.getGroupName()}
+                key={me.getGroupId()}
+                id={me.getGroupId()}
+                name={me.getGroupName()}
               />
               <Writer focus={true} group={props.id} />
             </div>
@@ -83,5 +83,6 @@ export default function MainContent(props) {
         </div>
       );
     default:
+      // TODO: what should we do here ?
   }
 }

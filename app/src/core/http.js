@@ -1,6 +1,6 @@
 import alert from "./alert.js";
 import storage from "./storage.js";
-import router from "./router.js";
+import util from "./util.js";
 
 const http = {
   sendFile: (formData, loadFn, progressFn = null, errorFn = null) => {
@@ -34,7 +34,7 @@ const http = {
     return storage
       .get("apiKey")
       .then(apiKey => {
-        url = router.toApp(url);
+        url = util.toApp(url);
         if (!url) {
           return;
         }
@@ -64,7 +64,7 @@ const http = {
     return storage
       .get("apiKey")
       .then(apiKey => {
-        url = router.toApp(url);
+        url = util.toApp(url);
         if (!url) {
           return;
         }
@@ -94,7 +94,7 @@ const http = {
               return Promise.reject(exception.message);
             }
           })
-          .catch(err => console.warn(`ERROR for ${  url}`, err));
+          .catch(err => console.warn(`ERROR for ${url}`, err));
       })
       .catch(error => alert.add(error, "alert-danger"));
   }

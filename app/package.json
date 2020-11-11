@@ -13,13 +13,17 @@
     "@babel/plugin-transform-react-jsx": "^7.10",
     "@babel/preset-env": "^7.10",
     "@babel/preset-react": "^7.10",
+    "@storeon/crosstab": "^1.0.2",
+    "@storeon/localstorage": "^1.2.0",
     "bootstrap": "^4.4",
     "idb-keyval": "^3.2",
     "image-blob-reduce": "^1.0.4",
+    "js-cookie": "^2.2.1",
     "node-sass": "^4.13",
     "parcel-bundler": "^1.12",
     "parcel-plugin-purgecss": "^3.0",
-    "preact": "^10.1"
+    "preact": "^10.1",
+    "storeon": "^3.0.4"
   },
   "devDependencies": {
     "eslint": "^7.3.1",

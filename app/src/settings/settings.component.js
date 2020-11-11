@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { http, lang, me, router } from "/core";
+import { http, lang, router, me, util } from "/core";
 import UserSettings from "./user-settings.component.js";
 import GroupSettings from "./group-settings.component.js";
 
@@ -13,7 +13,7 @@ export default class Settings extends Component {
   }
 
   render() {
-    if (!this.state.entity || !me.me) {
+    if (!this.state.entity || !me.id) {
       return;
     }
     return (
@@ -25,13 +25,13 @@ export default class Settings extends Component {
                 `nav-link${ 
                 this.state.entity["entityType"] == "user" ? " active" : ""}`
               }
-              href={router.toApp(`/users/${  me.me.id  }/settings`)}
+              href={util.toApp(`/users/${me.id}/settings`)}
               onClick={e => router.onClick(e)}
             >
               {lang.t("account")}
             </a>
           </li>
-          {me.me.groups.length > 0 && (
+          {me.groups?.length > 0 && (
             <li
               class="nav-item dropdown group-list"
               tabindex="-1"
@@ -46,10 +46,10 @@ export default class Settings extends Component {
                 {lang.t("groups")}
               </div>
               <div class="dropdown-menu">
-                {me.me.groups.map(e => (
+                {me.groups?.map(e => (
                   <a
                     class="seamless-link"
-                    href={router.toApp(`/groups/${  e.id  }/settings`)}
+                    href={util.toApp(`/groups/${  e.id  }/settings`)}
                     onClick={e => router.onClick(e)}
                   >
                     {e.name}
