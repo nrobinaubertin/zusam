@@ -16,6 +16,10 @@ export default class Login extends Component {
     storage.get("apiKey").then(apiKey => apiKey && router.navigate("/"));
   }
 
+  componentDidMount() {
+    storage.reset();
+  }
+
   sendPasswordReset(e) {
     e.preventDefault();
     let login = document.getElementById("login").value || "";
@@ -41,6 +45,7 @@ export default class Login extends Component {
       this.setState({ sending: false });
       if (res && res.api_key) {
         storage.set("apiKey", res.api_key).then(() => {
+          console.log('login');
           me.update().then(() => {
             setTimeout(() => router.navigate("/"), 100);
           });

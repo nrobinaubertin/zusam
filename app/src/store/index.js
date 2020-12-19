@@ -1,11 +1,9 @@
-import { createStoreon } from 'storeon'
-import { crossTab } from '@storeon/crosstab'
+import { createStoreon } from 'storeon';
+//import { crossTab } from '@storeon/crosstab';
 
-import { me } from './me.js'
+import { meStore } from './me.js';
+import { routerStore } from './router.js';
+import { entityStore } from './entity.js';
 
-const store = createStoreon([
-  me,
-  crossTab({ filter: () => true })
-]);
-
+const store = createStoreon([meStore, routerStore, entityStore]);
 export default store;

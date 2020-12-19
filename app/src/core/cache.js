@@ -1,27 +1,25 @@
-import { Store, get, keys, del } from "idb-keyval";
-import param from "./param.js";
+import http from "./http.js";
+import store from "/store";
 
 const cache = {
-  name: param.CACHE,
-  cache_store: new Store(param.CACHE_STORE, param.CACHE),
-  purgeOldCache: () => {
-    keys().then(keys =>
-      keys.map(k =>
-        get(k).then(e => {
-          // purge if older than 30 days
-          if (e.lastUsed + 1000 * 60 * 60 * 24 * 30 < Date.now()) {
-            console.log(`Remove from cache: ${k.url}`);
-            del(k);
-            caches.open(cache.name).then(c => c.delete(k));
-          }
-        })
-      )
-    );
+  get(url) {
+    return store?.get()[url];
   },
-  removeMatching: str => caches.open(cache.name).then(openCache => openCache.matchAll().then(a =>
-      Promise.all(a.filter(e => e.url.match(str)).map(e => openCache.delete(e)))
-    )
-  )
+
+  update(url) {
+    return http.get(url, true).then(r => {
+      store.dispatch('entity/update', {url, entity: r});
+      return r;
+    });
+  },
+
+  fetch(url) {
+    if (store.get()[url]?.id) {
+      return new Promise(r => r(store.get()[url]));
+    }
+    return cache.update(url);
+  },
+
 };
 
 export default cache;

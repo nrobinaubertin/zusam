@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { util, router, lang } from "/core";
+import { util } from "/core";
 import { FaIcon } from "/misc";
 
 export default class FileGrid extends Component {

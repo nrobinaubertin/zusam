@@ -1,62 +1,48 @@
 import http from "./http.js";
 import lang from "./lang.js";
-import alert from "./alert.js";
-import util from "./util.js";
-import router from "./router.js";
 import store from "/store";
 
 const me = {
 
   get() {
-    return store?.get();
+    return store.get()?.me;
   },
 
   get data() {
-    return store?.get()?.data;
+    return store.get()?.me?.data;
   },
 
   get groups() {
-    return store?.get()?.groups;
+    return store.get()?.me?.groups;
   },
 
   get id() {
-    return store?.get()?.id;
+    return store.get()?.me?.id;
   },
 
   get avatar() {
-    return store?.get()?.avatar;
+    return store.get()?.me?.avatar;
   },
 
   get notifications() {
-    return store?.get()?.notifications || [];
+    return store.get()?.notifications || [];
   },
 
-  getGroupId() {
-    if (store.get()["groups"]) {
-      switch (router.entity.entityType) {
-        case "group":
-          return util.getId(router.entity);
-        case "message":
-          return util.getId(router.entity.group);
-      }
-    }
-    return "";
-  },
-
-  getGroupName() {
-    let group = store.get()["groups"]?.find(g => g["id"] == me.getGroupId());
+  getGroupName(id) {
+    let group = store.get()["groups"]?.find(g => g["id"] == id);
     return group ? group["name"] : "";
   },
 
   update() {
     return http.get("/api/me", true).then(r => {
-      if (!r) {
+      if (!r || !r?.id) {
         store.dispatch('update', {});
+        return;
       }
       store.dispatch('me/update', Object.assign({loaded: true}, r));
-      http.get(`/api/users/${store.get()["id"]}/notifications`).then(r => {
-        store.dispatch('me/update', {notifications: r, loaded:true});
-      }),
+      http.get(`/api/users/${store.get()?.me?.id}/notifications`).then(r => {
+        store.dispatch('notifications/update', r);
+      });
       lang.fetchDict();
       return r;
     });
@@ -82,7 +68,7 @@ const me = {
   },
 
   hasBookmark(id) {
-    let state = store.get();
+    let state = store.get()?.me;
     if (Array.isArray(state?.data?.bookmarks)) {
       return state.data.bookmarks.some(bid => bid === id);
     }
@@ -95,6 +81,12 @@ const me = {
 
   addBookmark(id) {
     store.dispatch('bookmark/add', id);
+  },
+
+  removeAllNotifications() {
+    let state = store.get();
+    state.notifications
+      .map(n => store.dispatch('notification/remove', n))
   },
 
   removeMatchingNotifications(id) {

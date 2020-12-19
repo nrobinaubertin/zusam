@@ -1,46 +1,52 @@
 import { h, Component } from "preact";
-import { util, me } from "/core";
+import { router, util, me } from "/core";
 import Message from "./message.component.js";
+import { Navbar } from "/navbar";
+import { GroupTitle } from "/pages";
 
 export default class MessageParent extends Component {
   constructor(props) {
     super(props);
     this.onNewChild = this.onNewChild.bind(this);
     window.addEventListener("newChild", this.onNewChild);
-    this.state = { message: this.props.message };
   }
 
   componentDidMount() {
-    me.removeMatchingNotifications(this.props.message.id);
+    me.removeMatchingNotifications(this.props.id);
     setTimeout(() => window.scrollTo(0, 0));
   }
 
+  // TODO FIXME
   onNewChild(event) {
-    const newMsg = event.detail;
-    let msg = this.state.message;
-    if (newMsg.parent && util.getId(newMsg.parent) == msg["id"]) {
-      newMsg.author = me.get();
-      msg.children = [...msg.children, newMsg];
-      this.setState(prevState => ({
-        lastDisplayedChild: prevState.lastDisplayedChild + 1,
-        message: msg
-      }));
-    }
+  //  const newMsg = event.detail;
+  //  let msg = this.state.message;
+  //  if (newMsg.parent && util.getId(newMsg.parent) == msg["id"]) {
+  //    newMsg.author = me.get();
+  //    msg.children = [...msg.children, newMsg];
+  //    this.setState(prevState => ({
+  //      lastDisplayedChild: prevState.lastDisplayedChild + 1,
+  //      message: msg
+  //    }));
+  //  }
   }
 
   render() {
-    // don't display the message if not loaded or removed
-    if (!this.state.message || this.state.isRemoved) {
-      return;
-    }
-
     return (
-      <Message
-        message={this.state.message}
-        focus={this.props.focus}
-        isPublic={this.props.isPublic}
-        isChild={false}
-       />
+      <main>
+        <Navbar />
+        <div class="content">
+          <article class="mb-3 justify-content-center d-flex">
+            <div class="container pb-3">
+              <Message
+                focus={!!router.getParam("focus", router.search)}
+                isPublic={this.props.match.params.isPublic}
+                isChild={false}
+                id={this.props.match.params.id}
+               />
+            </div>
+          </article>
+        </div>
+      </main>
     );
   }
 }

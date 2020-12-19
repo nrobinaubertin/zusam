@@ -26,6 +26,7 @@ const util = {
   },
   // genId starts with a letter to be DOM friendly
   // seed can be used to order ids
+  // TODO improve using ideas from ai/nanoid
   genId: seed => `z${seed || ""}-${Date.now().toString().slice(-5)}${Math.random().toString().slice(-5)}`,
   // transform an id into int for the API (TODO: revisit this on 0.5)
   id2Int: id => parseInt(id.replace(/[^\d]/g,''), 10),
@@ -48,6 +49,9 @@ const util = {
   limitStrSize: (str, limit) => str.length > limit ? `${str.slice(0, limit-3)}...` : str,
   // full datetime as a string adapted to the users timezone
   humanFullDate: timestamp => {
+    if (!timestamp) {
+      return "";
+    }
     let d = new Date(timestamp * 1000);
     d = new Date(d.getTime() + d.getTimezoneOffset() * 60000 * -1);
     return d.toISOString().replace("T", " ").replace(/\..*$/, "");

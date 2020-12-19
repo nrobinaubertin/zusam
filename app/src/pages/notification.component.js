@@ -1,6 +1,6 @@
 import { h, Component, Fragment } from "preact";
-import { http, lang, router, util } from "/core";
-import { connectStoreon } from 'storeon/preact';
+import { http, lang, util, me } from "/core";
+import { Link } from "react-router-dom";
 
 class Notification extends Component {
   constructor(props) {
@@ -162,16 +162,11 @@ class Notification extends Component {
 
   render() {
     return (
-      <a
+      <Link
         class="notification seamless-link unselectable"
-        href={util.toApp(this.state.target)}
+        to={util.toApp(this.state.target)}
         title={this.state.title}
-        onClick={e => {
-          e.preventDefault();
-          this.props.me.removeMatchingNotifications(this.props.id).then(() =>
-            router.onClick(e, false, this.state.target)
-          );
-        }}
+        onClick={() => me.removeMatchingNotifications(this.props.id).then(console.log)}
       >
         <div class="miniature unselectable">{this.getMiniature()}</div>
         <div class="infos">
@@ -188,9 +183,9 @@ class Notification extends Component {
             {util.humanTime(this.props.createdAt)}
           </div>
         </div>
-      </a>
+      </Link>
     );
   }
 }
 
-export default connectStoreon('me', Notification);
+export default Notification

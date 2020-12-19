@@ -66,7 +66,7 @@ class Share extends Component {
   }
 
   render() {
-    if (!this.props.me.loaded) {
+    if (!this.props.me["loaded"]) {
       return;
     }
     return (

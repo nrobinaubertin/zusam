@@ -101,7 +101,7 @@ export default class MessageChildren extends Component {
 
           return (
             <MessageChild
-              message={e}
+              id={e.id}
               key={e.id}
               isPublic={this.props.isPublic}
             />

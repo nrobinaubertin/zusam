@@ -1,9 +1,10 @@
 import { Fragment, h, Component } from "preact";
-import { lang, http, router, util, me } from "/core";
+import { lang, http, router, util, me, cache } from "/core";
 import MessageChildren from "./message-children.component.js";
 import MessageHead from "./message-head.component.js";
 import MessageFooter from "./message-footer.component.js";
 import MessageBody from "./message-body.component.js";
+import { GroupTitle } from "/pages";
 import Writer from "./writer.component.js";
 
 export default class Message extends Component {
@@ -20,19 +21,25 @@ export default class Message extends Component {
     window.addEventListener("editMessage", this.onEditMessage);
   }
 
+  componentDidMount() {
+    cache.fetch(`/api/messages/${this.props.id}`).then(m => {
+      this.setState({message: m});
+    });
+  }
+
   async openPublicLink(event) {
     event.preventDefault();
     let newTab = window.open("about:blank", "_blank");
     const res = await http.get(
-      `/api/messages/${this.props.message.id}/get-public-link`
+      `/api/messages/${this.props.id}/get-public-link`
     );
     newTab.location = `${document.baseURI}public/${res.token}`;
   }
 
   onEditMessage(event) {
-    if (event.detail.id == this.props.message.id) {
+    if (event.detail.id == this.props.id) {
       this.props.key = +Date.now();
-      let msg = this.props.message;
+      let msg = this.state.message;
       msg.data = event.detail.data;
       msg.files = event.detail.files;
       this.setState({
@@ -49,7 +56,7 @@ export default class Message extends Component {
     if (this.props.isChild) {
       cn += " child";
     }
-    if (this.props.message.id == router.action) {
+    if (this.props.id == router.action) {
       cn += " highlight";
     }
     return cn;
@@ -58,11 +65,11 @@ export default class Message extends Component {
   deleteMessage(event) {
     event.preventDefault();
     if (confirm(lang.t("ask_delete_message"))) {
-      http.delete(`/api/messages/${this.props.message["id"]}`);
+      http.delete(`/api/messages/${this.props.id}`);
       if (this.props.isChild) {
         this.setState({isRemoved: true});
       } else {
-        router.navigate(`/groups/${this.props.message.group.id}`, {
+        router.navigate(`/groups/${this.state.message.group.id}`, {
           data: {resetGroupDisplay: true}
         });
       }
@@ -71,7 +78,7 @@ export default class Message extends Component {
 
   shareMessage(event) {
     event.preventDefault();
-    router.navigate(`/share?message=${this.props.message.id}`);
+    router.navigate(`/share?message=${this.props.id}`);
   }
 
   editMessage(event) {
@@ -81,7 +88,7 @@ export default class Message extends Component {
 
   publishInGroup() {
     http
-      .put(`/api/messages/${this.props.message.id}`, {
+      .put(`/api/messages/${this.props.id}`, {
         lastActivityDate: Math.floor(Date.now() / 1000),
         isInFront: true
       })
@@ -90,7 +97,7 @@ export default class Message extends Component {
           alert.add(lang.t("error"), "alert-danger");
           return;
         }
-        router.navigate(`/groups/${this.props.message.group.id}`);
+        router.navigate(`/groups/${this.state.message.group.id}`);
       });
   }
 
@@ -103,46 +110,64 @@ export default class Message extends Component {
     return (
       <Writer
         cancel={this.state.edit ? this.cancelEdit : null}
-        files={this.state.edit ? this.props.message.files : []}
+        files={this.state.edit ? this.state.message.files : []}
         focus={focus || !!this.state.edit}
-        group={this.props.message.group}
-        messageId={this.state.edit ? this.props.message.id : null}
+        group={this.state.message.group}
+        messageId={this.state.edit ? this.props.id : null}
         parent={
-          this.state.edit ? this.props.message["parent"] : this.props.message.id
+          this.state.edit ? this.state.message["parent"] : this.props.id
         }
-        text={this.state.edit ? this.props.message.data["text"] : ""}
-        title={this.state.edit ? this.props.message.data["title"] : ""}
+        text={this.state.edit ? this.state.message.data["text"] : ""}
+        title={this.state.edit ? this.state.message.data["title"] : ""}
         isChild={isChild}
       />
     );
   }
 
   render() {
-    if (this.state.isRemoved) {
+    if (this.state?.isRemoved || !this.state?.message) {
       return null;
     }
     return (
       <Fragment>
-        <div id={this.props.message.id} className={this.getComponentClass()}>
+        {!this.props.isChild && (
+          <GroupTitle
+            id={this.state.message?.group?.id}
+            name={this.state.message?.group?.name}
+          />
+        )}
+        <div id={this.props.id} className={this.getComponentClass()}>
           {this.state.edit && this.displayWriter(this.props.isChild)}
           {!this.state.edit && (
             <Fragment>
-              {this.props.preMessageHeadComponent}
+              {this.props.isChild && this.state.edit && (
+                <div class="message-head d-none d-md-block">
+                  <img
+                    class="rounded-circle w-3 material-shadow avatar"
+                    style={util.backgroundHash(me.id)}
+                    src={
+                      me.avatar
+                        ? util.crop(me.avatar?.id, 100, 100)
+                        : util.defaultAvatar
+                    }
+                  />
+                </div>
+              )}
               <MessageHead
-                author={this.props.message["author"]}
-                message={this.props.message}
+                author={this.state.message["author"]}
+                message={this.state.message}
                 isPublic={this.props.isPublic}
                 isChild={this.props.isChild}
               />
               <div class="main">
                 <MessageBody
-                  message={this.props.message}
+                  message={this.state.message}
                   isPublic={this.props.isPublic}
                   isChild={this.props.isChild}
                 />
                 <MessageFooter
-                  author={this.props.message["author"]}
-                  message={this.props.message}
+                  author={this.state.message["author"]}
+                  message={this.state.message}
                   editMessage={this.editMessage}
                   deleteMessage={this.deleteMessage}
                   shareMessage={this.shareMessage}
@@ -158,10 +183,10 @@ export default class Message extends Component {
         {this.props.postMessageComponent}
         {!this.props.isChild && (
           <MessageChildren
-            childMessages={this.props.message.children}
+            childMessages={this.state.message.children}
             isPublic={this.props.isPublic}
-            key={this.props.message.id}
-            id={this.props.message.id}
+            key={this.props.id}
+            id={this.props.id}
           />
         )}
         {!this.state.edit && !this.props.isPublic && !this.props.isChild && (

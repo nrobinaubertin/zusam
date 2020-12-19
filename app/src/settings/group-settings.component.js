@@ -1,6 +1,5 @@
 import { h, Component } from "preact";
 import { lang, alert, http, router, util, me } from "/core";
-import { connectStoreon } from 'storeon/preact';
 
 export default class GroupSettings extends Component {
   constructor(props) {

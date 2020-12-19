@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { lang, router, alert, http, util, cache, storage, me } from "/core";
+import { lang, router, alert, http, util, storage, me } from "/core";
 
 export default class UserSettings extends Component {
   constructor(props) {
@@ -92,7 +92,6 @@ export default class UserSettings extends Component {
       if (res["error"]) {
         alert.add(res["error"], "alert-danger");
       } else {
-        cache.removeMatching(this.state.id);
         this.setState(prevState => Object.assign(prevState, res));
         location.href = util.toApp(
           `${location.pathname}?alert=settings_updated`

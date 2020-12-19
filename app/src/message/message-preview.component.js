@@ -1,6 +1,23 @@
 import { h, Component } from "preact";
-import { http, router, util, me } from "/core";
+import { util, me, cache } from "/core";
 import { FaIcon } from "/misc";
+import { Link } from "react-router-dom";
+
+function getAvatar(user) {
+  return (
+    <img
+      title={user ? user.name : "--"}
+      className={`avatar material-shadow${user ? "" : " removed-user"}`}
+      style={util.backgroundHash(user ? user.id : "")}
+      src={
+        user?.avatar
+          ? util.crop(user.avatar["id"], 100, 100)
+          : util.defaultAvatar
+      }
+      onError={e => (e.currentTarget.src = util.defaultAvatar)}
+    />
+  );
+}
 
 export default class MessagePreview extends Component {
   constructor(props) {
@@ -13,29 +30,11 @@ export default class MessagePreview extends Component {
   componentDidMount() {
     if (this.props.message && this.props.message.author) {
       if (typeof(this.props.message.author) == "string") {
-        http
-          .get(`/api/users/${this.props.message.author}`)
-          .then(author => author && this.setState({ author }));
+        cache.fetch(`/api/users/${this.props.message.author}`).then(author => this.setState({author}));
       } else {
-        this.setState({author: this.props.message.author});
+        setTimeout(() => this.setState({author: this.props.message.author}));
       }
     }
-  }
-
-  getAvatar(user) {
-    return (
-      <img
-        title={user ? user.name : "--"}
-        className={`avatar material-shadow${user ? "" : " removed-user"}`}
-        style={util.backgroundHash(user ? user.id : "")}
-        src={
-          user && user.avatar
-            ? util.crop(user.avatar["id"], 100, 100)
-            : util.defaultAvatar
-        }
-        onError={e => (e.currentTarget.src = util.defaultAvatar)}
-      />
-    );
   }
 
   render() {
@@ -43,14 +42,13 @@ export default class MessagePreview extends Component {
       return null;
     }
     return (
-      <a
+      <Link
+        to={`/messages/${this.props.message.id}`}
         class="d-inline-block seamless-link message-preview unselectable"
-        href={util.toApp(`/messages/${this.props.message.id}`)}
-        onClick={e => router.onClick(e)}
         title={this.props.message.data["title"]}
       >
         <div tabindex={this.props.tabindex} class="card material-shadow-with-hover">
-          {this.getAvatar(this.state.author)}
+          {getAvatar(this.state.author)}
           {this.props.message.preview ? (
             <div
               class="card-miniature"
@@ -88,7 +86,7 @@ export default class MessagePreview extends Component {
             </span>
           </div>
         </div>
-      </a>
+      </Link>
     );
   }
 }

@@ -1,14 +1,13 @@
 import { h } from "preact";
-import { router, util } from "/core";
+import { Link } from "react-router-dom";
 
 export default function GroupTitle() {
   return (
-    <a
-      href={util.toApp(`/groups/${  this.props.id}`)}
-      onClick={e => router.onClick(e)}
+    <Link
+      to={`/groups/${this.props.id}`}
       class="no-decoration"
     >
       <div class="group-name">{this.props.name}</div>
-    </a>
+    </Link>
   );
 }

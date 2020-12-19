@@ -5,9 +5,8 @@ import { MessageSearchResult } from "/message";
 export default class GroupSearch extends Component {
   constructor(props) {
     super(props);
-    let groupId = util.getId(router.id);
     this.state = {
-      groupId,
+      groupId: props.id,
       loaded: false,
       messages: [],
       totalMessages: 0,
@@ -61,10 +60,10 @@ export default class GroupSearch extends Component {
       Array.isArray(this.state.messages) && (
         <div>
           <a
-            href={util.toApp(`/groups/${me.getGroupId()}`)}
+            href={util.toApp(`/groups/${this.state.groupId}`)}
             onClick={e => router.onClick(e)}
           >
-            <div class="group-name no-decoration">{me.getGroupName()}</div>
+            <div class="group-name no-decoration">{me.getGroupName(this.state.groupId)}</div>
           </a>
           <article id="group" class="justify-content-center d-flex">
             <div class="search-results-container container-fluid d-flex justify-content-center flex-wrap">

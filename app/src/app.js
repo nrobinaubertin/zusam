@@ -1,7 +1,5 @@
 import { h, Component } from "preact";
-import { alert, lang, storage, router, cache, api, me } from "/core";
-import { Navbar } from "/navbar";
-import { MainContent } from "/pages";
+import { http, util, storage, router, api, me } from "/core";
 import {
   Login,
   Public,
@@ -9,6 +7,17 @@ import {
   Signup,
   StopNotificationEmails
 } from "/outside";
+import { MessageParent } from "/message";
+import { CreateGroup, GroupTitle, GroupBoard, Share, BookmarkBoard } from "/pages";
+import { Settings } from "/settings";
+import { Navbar, GroupSearch } from "/navbar";
+import { FaIcon } from "/misc";
+import Writer from "/message/writer.component.js";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 
 export default class App extends Component {
   constructor() {
@@ -17,13 +26,16 @@ export default class App extends Component {
     // load api infos
     api.update();
 
-    // cache management
-    cache.purgeOldCache();
+    window.addEventListener('popstate', () => router.recalculate());
 
-    this.onRouterStateChange = this.onRouterStateChange.bind(this);
-    window.addEventListener("routerStateChange", this.onRouterStateChange);
-    window.addEventListener("fetchedNewDict", () => this.setState({}));
-    window.addEventListener("popstate", router.sync);
+    //this.onRouterStateChange = this.onRouterStateChange.bind(this);
+    //window.addEventListener("routerStateChange", this.onRouterStateChange);
+
+    window.addEventListener("fetchedNewDict", () => {
+      setTimeout(() => this.setState({lang: "up"}), 10);
+    });
+
+    //window.addEventListener("popstate", router.sync);
     window.addEventListener("click", e => {
       if (!e.target.closest(".dropdown")) {
         // close dropdowns if we are clicking on something else
@@ -42,89 +54,161 @@ export default class App extends Component {
       }
     });
 
-    // fetch language file
-    lang.fetchDict();
+    router.recalculate();
 
-    // get apiKey from the logged in user
-    storage.get("apiKey").then(apiKey => {
-      if (router.isOutside() || apiKey) {
-        router.sync();
-      } else {
-        // redirect to login if we don't have an apiKey
-        //  log this so that we can later remove a falsy behavior
-        //  We don't want to logout the user if the network is slow
-        console.warn("No API key");
-        router.navigate("/login");
-      }
-    });
-
-    this.state = {
-      action: router?.action,
-      route: router?.route,
-      id: router?.id,
-      entityUrl: router?.entityUrl
-    };
-  }
-
-  onRouterStateChange() {
-    this.setState({
-      action: router?.action,
-      route: router?.route,
-      id: router?.id,
-      entityUrl: router?.entityUrl
-    });
-    setTimeout(() => window.scrollTo(0, 0));
-    storage.get("apiKey").then(apiKey => {
-      me.fetch().then(user => {
-        if (apiKey && router.route != "login") {
-          if (!user["id"] && !router.isOutside()) {
-            storage.set("apiKey", "").then(() => router.navigate("/login"));
-          } else {
-            this.setState({
-              route: router?.route,
-              action: router?.action,
-              id: router?.id,
-              entityUrl: router?.entityUrl
-            });
-          }
-        } else if (!router.isOutside()) {
-            router.navigate("/login");
+    if (router.route == "invitation") {
+      storage.get("apiKey").then(apiKey => {
+        if (apiKey) {
+          http.post(`/api/groups/invitation/${router.id}`, {}).then(() => {
+            window.location.href = window.location.origin;
+          });
+        } else {
+          router.navigate(`/signup?inviteKey=${router.id}`);
         }
       });
+    } else {
+      storage.get("apiKey").then(apiKey => {
+        if (router.isOutside() || apiKey) {
+          router.sync();
+        } else {
+          // redirect to login if we don't have an apiKey
+          router.navigate("/login");
+        }
+      });
+    }
+  }
+
+  componentDidMount() {
+    me.fetch().then(user => {
+
+      if (!user) {
+        router.navigate("/login");
+        return;
+      }
+
+      if (router.route == "" || router.route == "/") {
+        if (user.data?.default_group) {
+          router.navigate(`/groups/${user?.data["default_group"]}`);
+        } else if (user?.groups[0]) {
+          router.navigate(`/groups/${user?.groups[0].id}`);
+        } else {
+          window.location = "/create-group";
+        }
+      }
     });
-    alert.add(lang.t(router.getParam("alert", router.search)));
   }
 
   render() {
-    // external pages for non connected users
-    switch (this.state.route) {
-      case "signup":
-        return (
-            <Signup />
-        );
-      case "stop-notification-emails":
-        return (
-            <StopNotificationEmails />
-        );
-      case "public":
-        return <Public token={this.state.id} key={this.state.id} />;
-      case "password-reset":
-        return (
-            <ResetPassword />
-        );
-      case "login":
-        return (
-            <Login />
-        );
-    }
+    //if (router.getParam("search") || router.getParam("hashtags")) {
+    //  return (
+    //    <div>
+    //      <GroupSearch key={router.id} id={router.id} />
+    //    </div>
+    //  );
+    //}
+
+    //if (router.route == "" || router.route == "/") {
+    //  me.fetch().then(user => {
+    //    console.log(user);
+    //    if (!user) {
+    //      router.navigate("/login");
+    //      return;
+    //    }
+    //    if (user.data?.default_group) {
+    //      router.navigate(`/groups/${user?.data["default_group"]}`);
+    //    } else if (user?.groups[0]) {
+    //      router.navigate(`/groups/${user?.groups[0].id}`);
+    //    } else {
+    //      window.location = "/create-group";
+    //    }
+    //  });
+    //}
 
     return (
-      <main>
-        <Navbar />
-        <div class="content">
-          <MainContent {...this.state} />
-        </div>
-      </main>
+      <Router>
+        <Switch>
+          <Route path="/signup">
+            <Signup />
+          </Route>
+
+          <Route path="/stop-notification-emails">
+            <StopNotificationEmails />
+          </Route>
+
+          <Route path="/public">
+            <Public token={router.id} key={router.id} />;
+          </Route>
+
+          <Route path="/reset-password">
+            <ResetPassword />
+          </Route>
+
+          <Route path="/login">
+            <Login />
+          </Route>
+
+          <Route path="/users/:id/settings">
+            <Settings key={router.entityUrl} entityUrl={router.entityUrl} />
+          </Route>
+
+          <Route path="/groups/:id/settings">
+            <Settings key={router.entityUrl} entityUrl={router.entityUrl} />
+          </Route>
+
+          <Route path="/create-group">
+            <main>
+              <Navbar />
+              <div class="content">
+                <CreateGroup />;
+              </div>
+            </main>
+          </Route>
+
+          <Route path="/share">
+            <main>
+              <Navbar />
+              <div class="content">
+                <Share />;
+              </div>
+            </main>
+          </Route>
+
+          <Route path="/messages/:id" component={MessageParent} />
+
+          <Route path="/bookmarks">
+            <main>
+              <Navbar />
+              <div class="content">
+                <div>
+                  <BookmarkBoard />
+                </div>
+              </div>
+            </main>
+          </Route>
+
+          <Route path="/groups/:id" component={GroupBoard} />
+
+          <Route path="/groups/:id/write">
+            {params => (
+              <main>
+                <Navbar />
+                <div class="content">
+                  <article class="mb-3">
+                    <div class="container pb-3">
+                      <GroupTitle
+                        key={params.id}
+                        id={params.id}
+                        name={me.getGroupName(params.id)}
+                      />
+                      <Writer focus={true} group={params.id} />
+                    </div>
+                  </article>
+                </div>
+              </main>
+            )}
+          </Route>
+        </Switch>
+      </Router>
     );
   }
 }
