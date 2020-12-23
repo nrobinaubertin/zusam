@@ -1,20 +1,27 @@
 import { h, Component } from "preact";
-import { http, lang, router, me, util } from "/core";
+import { http, lang } from "/core";
 import UserSettings from "./user-settings.component.js";
 import GroupSettings from "./group-settings.component.js";
 import { Navbar } from "/navbar";
+import { Link } from "react-router-dom";
+import { connectStoreon } from 'storeon/preact'
 
-export default class Settings extends Component {
+class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    if (props.entityUrl) {
-      http.get(props.entityUrl).then(res => this.setState({ entity: res }));
-    }
+  }
+
+  componentDidMount() {
+    http.get(`/api/${this.props.type}/${this.props.id}`).then(
+      res => {
+        this.setState({entity: res});
+      }
+    );
   }
 
   render() {
-    if (!this.state.entity || !me.id) {
+    if (!this.state.entity || !this.props.me.id) {
       return;
     }
     return (
@@ -26,40 +33,32 @@ export default class Settings extends Component {
               <div class="settings">
                 <ul class="nav nav-tabs">
                   <li class="nav-item">
-                    <a
-                      class={
-                        `nav-link${ 
-                        this.state.entity["entityType"] == "user" ? " active" : ""}`
-                      }
-                      href={util.toApp(`/users/${me.id}/settings`)}
-                      onClick={e => router.onClick(e)}
+                    <Link
+                      class={`nav-link${this.state.entity["entityType"] == "user" ? " active" : ""}`}
+                      to={`/users/${this.props.me.id}/settings`}
                     >
                       {lang.t("account")}
-                    </a>
+                    </Link>
                   </li>
-                  {me.groups?.length > 0 && (
+                  {this.props.me.groups?.length > 0 && (
                     <li
                       class="nav-item dropdown group-list"
                       tabindex="-1"
                       onClick={e => e.currentTarget.classList.toggle("active")}
                     >
                       <div
-                        class={
-                          `nav-link${ 
-                          this.state.entity["entityType"] == "group" ? " active" : ""}`
-                        }
+                        class={`nav-link${this.state.entity["entityType"] == "group" ? " active" : ""}`}
                       >
                         {lang.t("groups")}
                       </div>
                       <div class="dropdown-menu">
-                        {me.groups?.map(e => (
-                          <a
+                        {this.props.me.groups?.map(e => (
+                          <Link
                             class="seamless-link"
-                            href={util.toApp(`/groups/${  e.id  }/settings`)}
-                            onClick={e => router.onClick(e)}
+                            to={`/groups/${e.id}/settings`}
                           >
                             {e.name}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     </li>
@@ -79,3 +78,5 @@ export default class Settings extends Component {
     );
   }
 }
+
+export default connectStoreon('me', Settings)

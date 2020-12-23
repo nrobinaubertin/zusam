@@ -36,14 +36,21 @@ export const routerStore = store => {
     entity: {},
   }))
 
-  store.on('router/update', (state, router) => router)
+  store.on('router/update', (state, newState) => {
+    return {
+      entity: newState.entity,
+      backUrl: newState.backUrl,
+      backUrlPrompt: newState.backUrlPrompt
+    };
+  })
 
   store.on('router/recalculate', (state, url = "/") => {
     if (!url.match(/^http/)) {
       url = util.toApp(url);
     }
 
-    let newState = Object.assign(state, getUrlComponents(url));
+    //let newState = Object.assign(state, getUrlComponents(url));
+    let newState = getUrlComponents(url);
 
     // set url, backUrl and entityUrl
     storage.get("apiKey").then(apiKey => {
@@ -83,9 +90,8 @@ export const routerStore = store => {
                 if (newState.action) {
                   newState.backUrl = "/";
                 }
-
-              store.dispatch('router/update', newState);
             }
+            store.dispatch('router/update', newState);
           }).catch(e => console.warn(e));
       } else {
         newState.entity = null;

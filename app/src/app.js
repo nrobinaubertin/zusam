@@ -26,7 +26,8 @@ export default class App extends Component {
     // load api infos
     api.update();
 
-    window.addEventListener('popstate', () => router.recalculate());
+    //window.addEventListener('popstate', () => router.recalculate());
+    window.addEventListener("navigate", router.recalculate);
 
     //this.onRouterStateChange = this.onRouterStateChange.bind(this);
     //window.addEventListener("routerStateChange", this.onRouterStateChange);
@@ -99,14 +100,6 @@ export default class App extends Component {
   }
 
   render() {
-    //if (router.getParam("search") || router.getParam("hashtags")) {
-    //  return (
-    //    <div>
-    //      <GroupSearch key={router.id} id={router.id} />
-    //    </div>
-    //  );
-    //}
-
     //if (router.route == "" || router.route == "/") {
     //  me.fetch().then(user => {
     //    console.log(user);
@@ -127,55 +120,58 @@ export default class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route path="/signup">
+
+          <Route path="/signup" render={() => (
             <Signup />
-          </Route>
+          )} />
 
-          <Route path="/stop-notification-emails">
+          <Route path="/stop-notification-emails" render={() => (
             <StopNotificationEmails />
-          </Route>
+          )} />
 
-          <Route path="/public">
-            <Public token={router.id} key={router.id} />;
-          </Route>
+          <Route path="/public/:token" render={props => (
+            <Public token={props.match.params.token} key={props.match.params.token} />
+          )} />
 
-          <Route path="/reset-password">
+          <Route path="/reset-password" render={() => (
             <ResetPassword />
-          </Route>
+          )} />
 
-          <Route path="/login">
+          <Route path="/login" render={() => (
             <Login />
-          </Route>
+          )} />
 
-          <Route path="/users/:id/settings">
-            <Settings key={router.entityUrl} entityUrl={router.entityUrl} />
-          </Route>
+          <Route path="/:type/:id/settings" render={props => (
+            <Settings
+              type={props.match.params.type}
+              id={props.match.params.id}
+              key={props.match.params.id}
+            />
+          )} />
 
-          <Route path="/groups/:id/settings">
-            <Settings key={router.entityUrl} entityUrl={router.entityUrl} />
-          </Route>
-
-          <Route path="/create-group">
+          <Route path="/create-group" render={() => (
             <main>
               <Navbar />
               <div class="content">
                 <CreateGroup />;
               </div>
             </main>
-          </Route>
+          )} />
 
-          <Route path="/share">
+          <Route path="/share" render={() => (
             <main>
               <Navbar />
               <div class="content">
                 <Share />;
               </div>
             </main>
-          </Route>
+          )} />
 
-          <Route path="/messages/:id" component={MessageParent} />
+          <Route path="/messages/:id" render={props => (
+            <MessageParent id={props.match.params.id} isPublic={false} />
+          )} />
 
-          <Route path="/bookmarks">
+          <Route path="/bookmarks" render={() => (
             <main>
               <Navbar />
               <div class="content">
@@ -184,29 +180,42 @@ export default class App extends Component {
                 </div>
               </div>
             </main>
-          </Route>
+          )} />
 
-          <Route path="/groups/:id" component={GroupBoard} />
+          <Route path="/groups/:id" render={props => {
 
-          <Route path="/groups/:id/write">
-            {params => (
-              <main>
-                <Navbar />
-                <div class="content">
-                  <article class="mb-3">
-                    <div class="container pb-3">
-                      <GroupTitle
-                        key={params.id}
-                        id={params.id}
-                        name={me.getGroupName(params.id)}
-                      />
-                      <Writer focus={true} group={params.id} />
-                    </div>
-                  </article>
+            if (
+              router.getParam("search", props.location.search.substring(1))
+              || router.getParam("hashtags", props.location.search.substring(1))
+            ) {
+              return (
+                <div>
+                  <GroupSearch key={props.match.params.id} id={props.match.params.id} />
                 </div>
-              </main>
-            )}
-          </Route>
+              );
+            }
+
+            return <GroupBoard key={props.match.params.id} id={props.match.params.id} />
+          }} />
+
+          <Route path="/groups/:id/write" render={props => (
+            <main>
+              <Navbar />
+              <div class="content">
+                <article class="mb-3">
+                  <div class="container pb-3">
+                    <GroupTitle
+                      key={props.match.params.id}
+                      id={props.match.params.id}
+                      name={me.getGroupName(props.match.params.id)}
+                    />
+                    <Writer focus={true} group={props.match.params.id} />
+                  </div>
+                </article>
+              </div>
+            </main>
+          )} />
+
         </Switch>
       </Router>
     );

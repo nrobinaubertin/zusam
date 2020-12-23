@@ -39,9 +39,9 @@ export default class MessageParent extends Component {
             <div class="container pb-3">
               <Message
                 focus={!!router.getParam("focus", router.search)}
-                isPublic={this.props.match.params.isPublic}
+                isPublic={this.props.isPublic}
                 isChild={false}
-                id={this.props.match.params.id}
+                id={this.props.id}
                />
             </div>
           </article>

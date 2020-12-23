@@ -1,5 +1,5 @@
 import { h, Component, Fragment } from "preact";
-import { http, lang, util, me } from "/core";
+import { http, lang, util } from "/core";
 import { Link } from "react-router-dom";
 
 class Notification extends Component {
@@ -164,9 +164,8 @@ class Notification extends Component {
     return (
       <Link
         class="notification seamless-link unselectable"
-        to={util.toApp(this.state.target)}
+        to={this.state.target}
         title={this.state.title}
-        onClick={() => me.removeMatchingNotifications(this.props.id).then(console.log)}
       >
         <div class="miniature unselectable">{this.getMiniature()}</div>
         <div class="infos">

@@ -16,7 +16,7 @@ export default function Navbar() {
   //  router.onClick(evt);
   //}
 
-  const { dispatch, me } = useStoreon('me');
+  const { dispatch, me, backUrl } = useStoreon('me', 'backUrl');
   if (!me) {
     return null;
   }
@@ -26,7 +26,7 @@ export default function Navbar() {
       <div class="navbar-block">
         {(["share"].includes(router.route) ||
           ["settings"].includes(router.action) ||
-          !router.backUrl) && (
+          !backUrl) && (
             <div
               class="menu dropdown cursor-pointer"
               tabindex="-1"
@@ -68,10 +68,10 @@ export default function Navbar() {
               </div>
             </div>
           )}
-        {["groups", "messages"].includes(router.route) && router.backUrl && (
+        {["groups", "messages"].includes(router.route) && backUrl && (
           <Link
             class="seamless-link back"
-            to={router.backUrl}
+            to={backUrl}
           >
             <FaIcon family={"solid"} icon={"arrow-left"} />
           </Link>

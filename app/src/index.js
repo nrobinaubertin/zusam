@@ -16,17 +16,6 @@ function Index() {
 }
 
 function MainRouter() {
-
-    const history = useHistory();
-    console.log(history);
-    window.addEventListener("navigate", e => {
-      console.log("push navigate", e, history);
-      let rurl = e?.detail["url"].slice(21);
-      //console.log(e, setLocation, c, rurl);
-      history.push(rurl);
-      //setLocation(rurl);
-    });
-
   return (
     <StoreContext.Provider value={store}>
       <App />

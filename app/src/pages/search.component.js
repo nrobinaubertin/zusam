@@ -1,8 +1,9 @@
 import { h, Component } from "preact";
 import { lang, router } from "/core";
 import { FaIcon } from "/misc";
+import { connectStoreon } from 'storeon/preact'
 
-export default class Search extends Component {
+class Search extends Component {
   constructor(props) {
     super(props);
     this.search = this.search.bind(this);
@@ -11,7 +12,7 @@ export default class Search extends Component {
   search(evt) {
     evt.preventDefault();
     let group_id =
-    router.route == "messages" ? router.entity && router.entity.group && router.entity.group.id : router.entity && router.entity.id;
+    router.route == "messages" ? this.props.entity?.group?.id : this.props.entity?.id;
     // https://stackoverflow.com/a/37511463
     let searchTerms = document
       .getElementById("search")
@@ -24,15 +25,7 @@ export default class Search extends Component {
   }
 
   render() {
-    let entityId = null;
-    if (router.entity) {
-      if (router.entity.group && router.entity.group.id) {
-        entityId = router.entity.group.id;
-      } else {
-        entityId = router.entity.id;
-      }
-    }
-    if (entityId) {
+    if (this.props.entity?.group?.id || this.props.entity?.id) {
       return (
         <form class="navbar-block search-block" onSubmit={e => this.search(e)}>
           <div class="input-group">
@@ -59,3 +52,5 @@ export default class Search extends Component {
     }
   }
 }
+
+export default connectStoreon('entity', Search);

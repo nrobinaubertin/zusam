@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 export default class GroupBoard extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     let loaded = 1 + Math.floor((window.screen.width * window.screen.height) / (320 * 215));
     this.state = {
       loaded,
@@ -41,7 +40,7 @@ export default class GroupBoard extends Component {
 
   loadMessages(page) {
     http
-      .get(`/api/groups/${this.props.match.params.id}`)
+      .get(`/api/groups/${this.props.id}`)
       .then(res => {
         this.setState({
           group: res
@@ -49,7 +48,7 @@ export default class GroupBoard extends Component {
       });
 
     http
-      .get(`/api/groups/${this.props.match.params.id}/page/${page}`)
+      .get(`/api/groups/${this.props.id}/page/${page}`)
       .then(res => {
         if (res && Array.isArray(res["messages"])) {
           let new_loaded = Math.max(this.state.loaded, page * 30);
@@ -101,7 +100,7 @@ export default class GroupBoard extends Component {
   }
 
   render() {
-    if (!this.props.match.params.id) {
+    if (!this.props.id) {
       return;
     }
     return (
@@ -122,7 +121,7 @@ export default class GroupBoard extends Component {
                           tabindex={i + 1}
                           key={msg.id}
                           message={msg}
-                          groupId={this.props.match.params.id}
+                          groupId={this.props.id}
                         />
                       );
                     })}
@@ -131,7 +130,7 @@ export default class GroupBoard extends Component {
               </div>
             <Link
               class="write-button material-shadow seamless-link"
-              to={`/groups/${this.props.match.params.id}/write`}
+              to={`/groups/${this.props.id}/write`}
             >
               <FaIcon family={"solid"} icon={"pencil-alt"} />
             </Link>

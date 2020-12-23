@@ -48,7 +48,7 @@ const router = {
   get entityUrl() {
     //return store?.get()?.entityUrl;
     try {
-      return `api/${router.removeSubpath(location.pathname).slice(1).split("/").slice(1).join("/")}`;
+      return `/api/${router.removeSubpath(location.pathname).slice(1).split("/").slice(0,2).join("/")}`;
     } catch {
       return "";
     }
@@ -71,6 +71,7 @@ const router = {
 
   removeSubpath: path =>
     path ? path.replace(new RegExp(`^${util.getSubpath()}`), "") : "",
+
   getParam: (param, searchParams = window.location.search.substring(1)) => {
     let res = searchParams.split("&").find(e => e.split("=")[0] === param);
     return res ? decodeURIComponent(res.split("=")[1]) : "";
@@ -115,12 +116,10 @@ const router = {
   },
 
   navigate: async (url = "/", options = {replace: false}) => {
-    console.log("navigate !");
     if (!url.match(/^http/) && !options["raw_url"]) {
       url = util.toApp(url);
     }
 
-    console.log(url);
     window.dispatchEvent(new CustomEvent("navigate", {detail:{url}}));
     //if (options.replace) {
     //  history.replaceState(null, "", url);
@@ -129,7 +128,14 @@ const router = {
     //}
   },
 
-  recalculate: () => store.dispatch('router/recalculate'),
+  recalculate: e => {
+    try {
+      let url = new URL(e?.detail["url"]);
+      store.dispatch('router/recalculate', url.pathname);
+    } catch (_) {
+      return false;
+    }
+  },
 
   sync: () => {
     router.navigate(location.pathname + location.search + location.hash, {
