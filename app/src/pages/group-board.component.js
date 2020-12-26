@@ -109,10 +109,7 @@ export default class GroupBoard extends Component {
         <div class="content">
           <div>
               <div>
-                <GroupTitle
-                  id={this.state.group?.id}
-                  name={this.state.group?.name}
-                />
+                <GroupTitle />
                 <article id="group" class="justify-content-center d-flex">
                   <div class="message-container container-fluid d-flex justify-content-center flex-wrap">
                     {Array.isArray(this.state.messages) && this.state.messages.slice(0, this.state.loaded).map((msg, i) => {

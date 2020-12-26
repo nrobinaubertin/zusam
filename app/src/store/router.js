@@ -1,4 +1,4 @@
-import { http, util, lang, storage } from "/core";
+import { http, util, lang, storage, me } from "/core";
 
 const removeSubpath = path => path ? path.replace(new RegExp(`^${util.getSubpath()}`), "") : "";
 
@@ -40,11 +40,12 @@ export const routerStore = store => {
     return {
       entity: newState.entity,
       backUrl: newState.backUrl,
-      backUrlPrompt: newState.backUrlPrompt
+      backUrlPrompt: newState.backUrlPrompt,
     };
   })
 
   store.on('router/recalculate', (state, url = "/") => {
+    console.log("recalculate");
     if (!url.match(/^http/)) {
       url = util.toApp(url);
     }
@@ -72,7 +73,7 @@ export const routerStore = store => {
                   newState.backUrl = `/${newState.route}/${newState.id}`;
                   newState.backUrlPrompt = lang.t("cancel_write");
                 }
-                if (newState.search) {
+                if (location.search) {
                   newState.backUrl = `/${newState.route}/${newState.id}`;
                 }
                 break;

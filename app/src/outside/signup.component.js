@@ -1,8 +1,9 @@
 import { h, Component } from "preact";
 import { lang, alert, storage, http, router } from "/core";
 import zusam_logo from "/assets/zusam_logo.svg";
+import { withRouter } from "react-router-dom";
 
-export default class Signup extends Component {
+class Signup extends Component {
   constructor() {
     super();
     this.state = {
@@ -29,7 +30,7 @@ export default class Signup extends Component {
       .then(res => {
         if (res && !res.message) {
           storage.set("apiKey", res.api_key);
-          setTimeout(() => router.navigate("/"), 100);
+          setTimeout(() => this.props.history.push("/"), 100);
         } else {
           alert.add(lang.t(res.message));
         }
@@ -74,3 +75,5 @@ export default class Signup extends Component {
     );
   }
 }
+
+export default withRouter(Signup);

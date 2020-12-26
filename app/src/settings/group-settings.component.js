@@ -1,7 +1,8 @@
 import { h, Component } from "preact";
 import { lang, alert, http, router, util, me } from "/core";
+import { withRouter } from "react-router-dom";
 
-export default class GroupSettings extends Component {
+class GroupSettings extends Component {
   constructor(props) {
     super(props);
     this.updateSettings = this.updateSettings.bind(this);
@@ -56,7 +57,7 @@ export default class GroupSettings extends Component {
       } else {
         this.props.dispatch('me/fetch');
         alert.add(lang.t("group_left"));
-        router.navigate("/");
+        this.props.history.push("/");
       }
     });
   }
@@ -152,3 +153,5 @@ export default class GroupSettings extends Component {
     );
   }
 }
+
+export default withRouter(GroupSettings);

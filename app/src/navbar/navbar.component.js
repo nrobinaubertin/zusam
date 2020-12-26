@@ -3,7 +3,7 @@ import { lang, router, util } from "/core";
 import { FaIcon } from "/misc";
 import { Search } from "/pages";
 import { GroupsDropdownNavbar, NotificationsDropdownNavbar } from "/navbar";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useStoreon } from 'storeon/preact'
 
 export default function Navbar() {
@@ -16,6 +16,15 @@ export default function Navbar() {
   //  router.onClick(evt);
   //}
 
+  //let history = useHistory();
+  //history.listen((location, action) => {
+  //  // location is an object like window.location
+  //  console.log(action, location.pathname, location.state)
+  //  console.log("DETECTED NAVBARD");
+  //  router.recalculate(location.pathname);
+  //});
+
+  // TODO remove dispatch
   const { dispatch, me, backUrl } = useStoreon('me', 'backUrl');
   if (!me) {
     return null;

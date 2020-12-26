@@ -6,6 +6,7 @@ import { useStoreon } from 'storeon/preact'
 
 export default function NotificationsDropdownNavbar() {
 
+  // TODO remove dispatch
   const { dispatch, notifications } = useStoreon('notifications');
   if (!notifications) {
     return null;

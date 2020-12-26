@@ -3,8 +3,9 @@ import { lang, alert, http, router, util, api, me } from "/core";
 import { FaIcon } from "/misc";
 import EmbedBlock from "./embed-block.component.js";
 import FileGrid from "./file-grid.component.js";
+import { withRouter } from "react-router-dom";
 
-export default class Writer extends Component {
+class Writer extends Component {
 
   constructor(props) {
     super(props);
@@ -164,7 +165,7 @@ export default class Writer extends Component {
       } else {
         setTimeout(() => {
           window.dispatchEvent(new CustomEvent("newParent", { detail: res }));
-          router.navigate(util.toApp(`/messages/${res.id}`));
+          this.props.history.push(util.toApp(`/messages/${res.id}`));
         }, 500);
       }
       this.setState({
@@ -426,3 +427,5 @@ export default class Writer extends Component {
     );
   }
 }
+
+export default withRouter(Writer);

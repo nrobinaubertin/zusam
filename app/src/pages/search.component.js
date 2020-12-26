@@ -2,6 +2,7 @@ import { h, Component } from "preact";
 import { lang, router } from "/core";
 import { FaIcon } from "/misc";
 import { connectStoreon } from 'storeon/preact'
+import { withRouter } from "react-router-dom";
 
 class Search extends Component {
   constructor(props) {
@@ -19,7 +20,8 @@ class Search extends Component {
       .value.normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .split(" ");
-    router.navigate(
+    console.log("SEARCH", searchTerms);
+    this.props.history.push(
       `/groups/${group_id}?search=${searchTerms.map(e => encodeURIComponent(e)).join("+")}`
     );
   }
@@ -53,4 +55,4 @@ class Search extends Component {
   }
 }
 
-export default connectStoreon('entity', Search);
+export default withRouter(connectStoreon('entity', Search));

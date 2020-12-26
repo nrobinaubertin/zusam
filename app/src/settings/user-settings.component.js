@@ -51,7 +51,7 @@ export default class UserSettings extends Component {
     let confirmDeletion = confirm(lang.t("are_you_sure"));
     if (confirmDeletion) {
       http.delete(`/api/users/${this.state.id}`).then(() => {
-        router.navigate("/logout");
+        this.props.history.push("/logout");
       });
     }
   }

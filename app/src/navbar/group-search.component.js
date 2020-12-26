@@ -59,12 +59,6 @@ export default class GroupSearch extends Component {
     return (
       Array.isArray(this.state.messages) && (
         <div>
-          <a
-            href={util.toApp(`/groups/${this.state.groupId}`)}
-            onClick={e => router.onClick(e)}
-          >
-            <div class="group-name no-decoration">{me.getGroupName(this.state.groupId)}</div>
-          </a>
           <article id="group" class="justify-content-center d-flex">
             <div class="search-results-container container-fluid d-flex justify-content-center flex-wrap">
               {this.state.messages.length == 0 && this.state.loaded && (

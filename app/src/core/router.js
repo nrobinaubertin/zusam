@@ -116,6 +116,7 @@ const router = {
   },
 
   navigate: async (url = "/", options = {replace: false}) => {
+    console.warn("FORCE NAVIGATE");
     if (!url.match(/^http/) && !options["raw_url"]) {
       url = util.toApp(url);
     }
@@ -128,13 +129,8 @@ const router = {
     //}
   },
 
-  recalculate: e => {
-    try {
-      let url = new URL(e?.detail["url"]);
-      store.dispatch('router/recalculate', url.pathname);
-    } catch (_) {
-      return false;
-    }
+  recalculate: path => {
+    store.dispatch('router/recalculate', path);
   },
 
   sync: () => {

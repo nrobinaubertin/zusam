@@ -17,17 +17,18 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  withRouter,
 } from "react-router-dom";
 
-export default class App extends Component {
-  constructor() {
-    super();
+class App extends Component {
+  constructor(props) {
+    super(props);
 
     // load api infos
     api.update();
 
-    //window.addEventListener('popstate', () => router.recalculate());
-    window.addEventListener("navigate", router.recalculate);
+    //window.addEventListener('popstate', console.log);
+    //window.addEventListener("navigate", router.recalculate);
 
     //this.onRouterStateChange = this.onRouterStateChange.bind(this);
     //window.addEventListener("routerStateChange", this.onRouterStateChange);
@@ -64,7 +65,7 @@ export default class App extends Component {
             window.location.href = window.location.origin;
           });
         } else {
-          router.navigate(`/signup?inviteKey=${router.id}`);
+          this.props.history.push(`/signup?inviteKey=${router.id}`);
         }
       });
     } else {
@@ -73,30 +74,50 @@ export default class App extends Component {
           router.sync();
         } else {
           // redirect to login if we don't have an apiKey
-          router.navigate("/login");
+          this.props.history.push("/login");
         }
       });
     }
   }
 
+  //componentDidUpdate(prevProps) {
+  //  console.log("UPDATE");
+  //  if (this.props.location !== prevProps.location) {
+  //    console.log("route change detected");
+  //    router.recalculate(this.props.location.pathname);
+  //  }
+  //}
+
   componentDidMount() {
+    //console.log(this.props.history);
+    //this.props.history.listen((location, action) => {
+    //  // location is an object like window.location
+    //  console.log(action, location.pathname, location.state)
+    //  console.log("DETECTED");
+    //  router.recalculate();
+    //});
+
     me.fetch().then(user => {
 
       if (!user) {
-        router.navigate("/login");
+        this.props.history.push("/login");
         return;
       }
 
       if (router.route == "" || router.route == "/") {
         if (user.data?.default_group) {
-          router.navigate(`/groups/${user?.data["default_group"]}`);
+          this.props.history.push(`/groups/${user?.data["default_group"]}`);
         } else if (user?.groups[0]) {
-          router.navigate(`/groups/${user?.groups[0].id}`);
+          this.props.history.push(`/groups/${user?.groups[0].id}`);
         } else {
           window.location = "/create-group";
         }
       }
     });
+  }
+
+  componentWillUmount() {
+    console.log("APPJS unmount");
   }
 
   render() {
@@ -168,7 +189,7 @@ export default class App extends Component {
           )} />
 
           <Route path="/messages/:id" render={props => (
-            <MessageParent id={props.match.params.id} isPublic={false} />
+            <MessageParent key={props.match.params.id} id={props.match.params.id} isPublic={false} />
           )} />
 
           <Route path="/bookmarks" render={() => (
@@ -189,9 +210,17 @@ export default class App extends Component {
               || router.getParam("hashtags", props.location.search.substring(1))
             ) {
               return (
-                <div>
-                  <GroupSearch key={props.match.params.id} id={props.match.params.id} />
-                </div>
+                <main>
+                  <Navbar />
+                  <div class="content">
+                    <article class="mb-3">
+                      <div class="container pb-3">
+                        <GroupTitle />
+                        <GroupSearch key={props.match.params.id} id={props.match.params.id} />
+                      </div>
+                    </article>
+                  </div>
+                </main>
               );
             }
 
@@ -204,11 +233,7 @@ export default class App extends Component {
               <div class="content">
                 <article class="mb-3">
                   <div class="container pb-3">
-                    <GroupTitle
-                      key={props.match.params.id}
-                      id={props.match.params.id}
-                      name={me.getGroupName(props.match.params.id)}
-                    />
+                    <GroupTitle />
                     <Writer focus={true} group={props.match.params.id} />
                   </div>
                 </article>
@@ -221,3 +246,5 @@ export default class App extends Component {
     );
   }
 }
+
+export default withRouter(App);

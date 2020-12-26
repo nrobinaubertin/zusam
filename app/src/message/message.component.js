@@ -6,8 +6,9 @@ import MessageFooter from "./message-footer.component.js";
 import MessageBody from "./message-body.component.js";
 import { GroupTitle } from "/pages";
 import Writer from "./writer.component.js";
+import { withRouter } from "react-router-dom";
 
-export default class Message extends Component {
+class Message extends Component {
   constructor(props) {
     super(props);
     this.getComponentClass = this.getComponentClass.bind(this);
@@ -69,7 +70,7 @@ export default class Message extends Component {
       if (this.props.isChild) {
         this.setState({isRemoved: true});
       } else {
-        router.navigate(`/groups/${this.state.message.group.id}`, {
+        this.props.history.push(`/groups/${this.state.message.group.id}`, {
           data: {resetGroupDisplay: true}
         });
       }
@@ -78,7 +79,7 @@ export default class Message extends Component {
 
   shareMessage(event) {
     event.preventDefault();
-    router.navigate(`/share?message=${this.props.id}`);
+    this.props.history.push(`/share?message=${this.props.id}`);
   }
 
   editMessage(event) {
@@ -97,7 +98,7 @@ export default class Message extends Component {
           alert.add(lang.t("error"), "alert-danger");
           return;
         }
-        router.navigate(`/groups/${this.state.message.group.id}`);
+        this.props.history.push(`/groups/${this.state.message.group.id}`);
       });
   }
 
@@ -131,10 +132,7 @@ export default class Message extends Component {
     return (
       <Fragment>
         {!this.props.isChild && (
-          <GroupTitle
-            id={this.state.message?.group?.id}
-            name={this.state.message?.group?.name}
-          />
+          <GroupTitle />
         )}
         <div id={this.props.id} className={this.getComponentClass()}>
           {this.state.edit && this.displayWriter(this.props.isChild)}
@@ -211,3 +209,5 @@ export default class Message extends Component {
     );
   }
 }
+
+export default withRouter(Message);
