@@ -33,15 +33,13 @@ class Message extends Component {
       setTimeout(() => window.scrollTo(0, 0));
     }
 
-    if (this.props.id == router.action) {
-      console.log("wait for it");
-      setTimeout(() => {
-        console.log("coucou");
+    setTimeout(() => {
+      if (this.props.id == router.action) {
         const msgElement = document.getElementById(this.props.id);
         msgElement.scrollIntoView({ block: "start", behavior: "smooth" });
         setTimeout(() => msgElement.classList.remove("highlight"), 1000);
-      }, 1000);
-    }
+      }
+    }, 1000);
 
   }
 
