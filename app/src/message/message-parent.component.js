@@ -2,18 +2,12 @@ import { h, Component } from "preact";
 import { router, util, me } from "/core";
 import Message from "./message.component.js";
 import { Navbar } from "/navbar";
-import { GroupTitle } from "/pages";
 
 export default class MessageParent extends Component {
   constructor(props) {
     super(props);
     this.onNewChild = this.onNewChild.bind(this);
     window.addEventListener("newChild", this.onNewChild);
-  }
-
-  componentDidMount() {
-    me.removeMatchingNotifications(this.props.id);
-    setTimeout(() => window.scrollTo(0, 0));
   }
 
   // TODO FIXME

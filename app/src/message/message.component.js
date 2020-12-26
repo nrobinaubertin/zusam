@@ -26,6 +26,23 @@ class Message extends Component {
     cache.fetch(`/api/messages/${this.props.id}`).then(m => {
       this.setState({message: m});
     });
+
+    me.removeMatchingNotifications(this.props.id);
+
+    if (!this.props.isChild) {
+      setTimeout(() => window.scrollTo(0, 0));
+    }
+
+    if (this.props.id == router.action) {
+      console.log("wait for it");
+      setTimeout(() => {
+        console.log("coucou");
+        const msgElement = document.getElementById(this.props.id);
+        msgElement.scrollIntoView({ block: "start", behavior: "smooth" });
+        setTimeout(() => msgElement.classList.remove("highlight"), 1000);
+      }, 1000);
+    }
+
   }
 
   async openPublicLink(event) {
