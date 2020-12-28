@@ -178,11 +178,11 @@ const router = {
     store.dispatch('router/recalculate', path);
   },
 
-  sync: () => {
-    router.navigate(location.pathname + location.search + location.hash, {
-      replace: true
-    });
-  },
+  //sync: () => {
+  //  router.navigate(location.pathname + location.search + location.hash, {
+  //    replace: true
+  //  });
+  //},
 
   onClick: (e, newTab = false, url = null) => {
     // stop propagation

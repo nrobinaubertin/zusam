@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { http, util, storage, router, api, me } from "/core";
+import { http, storage, router, api, me } from "/core";
 import {
   Login,
   Public,
@@ -8,10 +8,9 @@ import {
   StopNotificationEmails
 } from "/outside";
 import { MessageParent } from "/message";
-import { CreateGroup, GroupTitle, GroupBoard, Share, BookmarkBoard } from "/pages";
+import { Home, CreateGroup, GroupTitle, GroupBoard, Share, BookmarkBoard } from "/pages";
 import { Settings } from "/settings";
 import { Navbar, GroupSearch } from "/navbar";
-import { FaIcon } from "/misc";
 import Writer from "/message/writer.component.js";
 import {
   BrowserRouter as Router,
@@ -27,17 +26,15 @@ class App extends Component {
     // load api infos
     api.update();
 
-    //window.addEventListener('popstate', console.log);
-    //window.addEventListener("navigate", router.recalculate);
+    // update me
+    me.update();
 
-    //this.onRouterStateChange = this.onRouterStateChange.bind(this);
-    //window.addEventListener("routerStateChange", this.onRouterStateChange);
-
+    // i18n dict management
     window.addEventListener("fetchedNewDict", () => {
       setTimeout(() => this.setState({lang: "up"}), 10);
     });
 
-    //window.addEventListener("popstate", router.sync);
+    // manage dropdowns
     window.addEventListener("click", e => {
       if (!e.target.closest(".dropdown")) {
         // close dropdowns if we are clicking on something else
@@ -56,91 +53,32 @@ class App extends Component {
       }
     });
 
-    router.recalculate();
-
-    if (router.route == "invitation") {
-      storage.get("apiKey").then(apiKey => {
-        if (apiKey) {
-          http.post(`/api/groups/invitation/${router.id}`, {}).then(() => {
-            window.location.href = window.location.origin;
-          });
-        } else {
-          this.props.history.push(`/signup?inviteKey=${router.id}`);
-        }
-      });
-    } else {
-      storage.get("apiKey").then(apiKey => {
-        if (router.isOutside() || apiKey) {
-          router.sync();
-        } else {
-          // redirect to login if we don't have an apiKey
-          this.props.history.push("/login");
-        }
-      });
-    }
-  }
-
-  //componentDidUpdate(prevProps) {
-  //  console.log("UPDATE");
-  //  if (this.props.location !== prevProps.location) {
-  //    console.log("route change detected");
-  //    router.recalculate(this.props.location.pathname);
-  //  }
-  //}
-
-  componentDidMount() {
-    //console.log(this.props.history);
-    //this.props.history.listen((location, action) => {
-    //  // location is an object like window.location
-    //  console.log(action, location.pathname, location.state)
-    //  console.log("DETECTED");
-    //  router.recalculate();
-    //});
-
-    me.fetch().then(user => {
-
-      if (!user) {
+    // check if user is connected
+    storage.get("apiKey").then(apiKey => {
+      if (router.route == "invitation") {
+          if (apiKey) {
+            http.post(`/api/groups/invitation/${router.id}`, {}).then(() => {
+              this.props.history.push("/");
+            });
+          } else {
+            this.props.history.push(`/signup?inviteKey=${router.id}`);
+          }
+      } else if (!router.isOutside() && !apiKey) {
+        // redirect to login if we don't have an apiKey
         this.props.history.push("/login");
-        return;
-      }
-
-      if (router.route == "" || router.route == "/") {
-        if (user.data?.default_group) {
-          this.props.history.push(`/groups/${user?.data["default_group"]}`);
-        } else if (user?.groups[0]) {
-          this.props.history.push(`/groups/${user?.groups[0].id}`);
-        } else {
-          window.location = "/create-group";
-        }
       }
     });
   }
 
-  componentWillUmount() {
-    console.log("APPJS unmount");
-  }
-
   render() {
-    //if (router.route == "" || router.route == "/") {
-    //  me.fetch().then(user => {
-    //    console.log(user);
-    //    if (!user) {
-    //      router.navigate("/login");
-    //      return;
-    //    }
-    //    if (user.data?.default_group) {
-    //      router.navigate(`/groups/${user?.data["default_group"]}`);
-    //    } else if (user?.groups[0]) {
-    //      router.navigate(`/groups/${user?.groups[0].id}`);
-    //    } else {
-    //      window.location = "/create-group";
-    //    }
-    //  });
-    //}
 
     return (
       <Router>
         <Switch>
+
+          <Route path="/" exact={true} render={() => (
+              <Home />
+          )} />
 
           <Route path="/signup" render={() => (
             <Signup />

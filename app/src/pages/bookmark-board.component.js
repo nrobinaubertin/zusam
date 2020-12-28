@@ -2,6 +2,7 @@ import { h, Component } from "preact";
 import { util, http, lang, router, me } from "/core";
 import { MessagePreview } from "/message";
 import store from "/store";
+import { Link } from "react-router-dom";
 
 export default class BookmarkBoard extends Component {
 
@@ -34,13 +35,9 @@ export default class BookmarkBoard extends Component {
     }
     return (
       <div>
-        <a
-          href={util.toApp("/bookmarks")}
-          onClick={e => router.onClick(e)}
-          class="no-decoration"
-        >
+        <Link to={util.toApp("/bookmarks")} class="no-decoration">
           <div class="group-name">{lang.t("bookmarks")}</div>
-        </a>
+        </Link>
         <article id="group" class="justify-content-center d-flex">
           <div class="message-container container-fluid d-flex justify-content-center flex-wrap">
             {this.state.messages.filter(m => m?.id).map((msg, i) => {
