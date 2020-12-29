@@ -16,6 +16,7 @@
     "@storeon/crosstab": "^1.0.2",
     "@storeon/localstorage": "^1.2.0",
     "bootstrap": "^4.4",
+    "i18next": "^19.8.4",
     "idb-keyval": "^3.2",
     "image-blob-reduce": "^1.0.4",
     "js-cookie": "^2.2.1",
@@ -23,13 +24,18 @@
     "parcel-bundler": "^1.12",
     "parcel-plugin-purgecss": "^3.0",
     "preact": "^10.1",
+    "react-i18next": "^11.8.5",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
     "storeon": "^3.0.4"
   },
   "devDependencies": {
+    "@size-limit/preset-app": "^4.9.0",
     "eslint": "^7.3.1",
     "eslint-config-preact": "^1.1",
     "prettier": "^2.0",
-    "sass": "^1.23"
+    "sass": "^1.23",
+    "size-limit": "^4.9.0"
   },
   "alias": {
     "react": "preact/compat",
@@ -39,5 +45,10 @@
   "eslintConfig": {
     "extends": "preact"
   },
-  "browserslist": "Firefox ESR, last 2 versions and > 1%, not dead, not ie <= 11"
+  "browserslist": "Firefox ESR, last 2 versions and > 1%, not dead, not ie <= 11",
+  "size-limit": [
+    {
+      "path": "dist/*.js"
+    }
+  ]
 }
