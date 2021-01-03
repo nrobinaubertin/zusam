@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class Edit extends ApiController
 {
@@ -32,29 +32,26 @@ class Edit extends ApiController
 
     /**
      * @Route("/messages/{id}", methods={"PUT"})
-     * @SWG\Parameter(
-     *  name="data",
-     *  in="body",
-     *  @SWG\Schema(
+     * @OA\RequestBody(
+     *  @OA\Schema(
      *    type="object",
-     *    @SWG\Property(property="text", type="string"),
-     *    @SWG\Property(property="title", type="string")
+     *    @OA\Property(property="text", type="string"),
+     *    @OA\Property(property="title", type="string"),
+     *    @OA\Property(
+     *      property="files",
+     *      type="array",
+     *      @OA\Items(
+     *        type="string",
+     *      )
+     *    ),
      *  )
      * )
-     * @SWG\Parameter(
-     *  name="files",
-     *  in="body",
-     *  @SWG\Schema(
-     *    type="array",
-     *    @SWG\Items(type="string")
-     *  )
-     * )
-     * @SWG\Response(
+     * @OA\Response(
      *  response=200,
      *  description="Modify a bookmark",
      *  @Model(type=App\Entity\Message::class, groups={"read_message"})
      * )
-     * @SWG\Tag(name="message")
+     * @OA\Tag(name="message")
      * @Security(name="api_key")
      */
     public function index(string $id, Request $request): Response

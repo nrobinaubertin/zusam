@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
  * @ORM\Table(name="`user`")
@@ -23,7 +23,7 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="guid")
      * @Groups("*")
      * @Assert\NotBlank()
-     * @SWG\Property(type="guid")
+     * @OA\Property(type="guid")
      */
     private $id;
 
@@ -31,7 +31,7 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="integer")
      * @Assert\Type("integer")
      * @Assert\NotNull()
-     * @SWG\Property(type="integer")
+     * @OA\Property(type="integer")
      */
     private $createdAt;
 
@@ -39,7 +39,7 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="string", unique=true)
      * @Groups({"read_me", "write_user"})
      * @Assert\NotBlank()
-     * @SWG\Property(type="string")
+     * @OA\Property(type="string")
      */
     private $login;
 
@@ -47,14 +47,14 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="string")
      * @Groups({"write_user"})
      * @Assert\NotBlank()
-     * @SWG\Property(type="string")
+     * @OA\Property(type="string")
      */
     private $password;
 
     /**
      * @ORM\Column(type="guid", unique=true)
      * @Assert\NotBlank()
-     * @SWG\Property(type="guid")
+     * @OA\Property(type="guid")
      */
     private $secretKey;
 
@@ -62,13 +62,13 @@ class User implements UserInterface, \Serializable
      * @ORM\ManyToMany(targetEntity="App\Entity\Group", inversedBy="users")
      * @ORM\JoinTable(name="users_groups")
      * @Groups({"read_me"})
-     * @SWG\Property(type="array", @SWG\Items(type="App\Entity\Group"))
+     * @OA\Property(type="array", @OA\Items(type="App\Entity\Group"))
      */
     private $groups;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="author")
-     * @SWG\Property(type="array", @SWG\Items(type="App\Entity\Message"))
+     * @OA\Property(type="array", @OA\Items(type="App\Entity\Message"))
      */
     private $messages;
 
@@ -76,7 +76,7 @@ class User implements UserInterface, \Serializable
      * @ORM\OneToOne(targetEntity="App\Entity\File")
      * @ORM\JoinColumn(name="avatar_id", referencedColumnName="id")
      * @Groups("*")
-     * @SWG\Property(type="App\Entity\File")
+     * @OA\Property(type="App\Entity\File")
      */
     private $avatar;
 
@@ -84,7 +84,7 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="string")
      * @Groups("*")
      * @Assert\NotBlank()
-     * @SWG\Property(type="string")
+     * @OA\Property(type="string")
      */
     private $name;
 
@@ -92,13 +92,13 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="json", nullable=true)
      * @Groups({"read_me", "read_user", "write_user"})
      * @Assert\NotBlank()
-     * @SWG\Property(type="object")
+     * @OA\Property(type="object")
      */
     private $data;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Notification", mappedBy="owner")
-     * @SWG\Property(type="array", @SWG\Items(type="App\Entity\Notification"))
+     * @OA\Property(type="array", @OA\Items(type="App\Entity\Notification"))
      */
     private $notifications;
 
@@ -106,13 +106,13 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"read_me"})
      * @Assert\Type("integer")
-     * @SWG\Property(type="integer")
+     * @OA\Property(type="integer")
      */
     private $lastActivityDate;
 
     /**
      * @Groups("*")
-     * @SWG\Property(type="string")
+     * @OA\Property(type="string")
      */
     private $entityType;
 

@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class Upload extends ApiController
 {
@@ -36,22 +36,25 @@ class Upload extends ApiController
 
     /**
      * @Route("/files", methods={"POST"})
-     * @SWG\Parameter(
-     *  name="file",
-     *  in="formData",
-     *  type="file",
+     * @OA\RequestBody(
+     *  @OA\Schema(
+     *    type="object",
+     *    @OA\Property(
+     *      property="fileIndex",
+     *      type="integer"
+     *    ),
+     *    @OA\Property(
+     *      property="file",
+     *      type="binary"
+     *    )
+     *  )
      * )
-     * @SWG\Parameter(
-     *  name="fileIndex",
-     *  in="formData",
-     *  type="integer",
-     * )
-     * @SWG\Response(
+     * @OA\Response(
      *  response=201,
      *  description="Upload a file",
      *  @Model(type=App\Entity\File::class, groups={"read_file"})
      * )
-     * @SWG\Tag(name="file")
+     * @OA\Tag(name="file")
      * @Security(name="api_key")
      */
     public function index(Request $request, ImageService $imageService): Response

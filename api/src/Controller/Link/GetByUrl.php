@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class GetByUrl extends ApiController
 {
@@ -29,45 +29,41 @@ class GetByUrl extends ApiController
 
     /**
      * @Route("/links/by_url", methods={"POST"})
-     * @SWG\Parameter(
-     *  name="url",
-     *  in="body",
-     *  @SWG\Schema(
-     *    type="string"
+     * @OA\RequestBody(
+     *  @OA\Schema(
+     *    type="object",
+     *    @OA\Property(
+     *      property="name",
+     *      type="string"
+     *    ),
+     *    @OA\Property(
+     *      property="rescan",
+     *      type="boolean"
+     *    ),
+     *    @OA\Property(
+     *      property="onlyData",
+     *      type="boolean"
+     *    ),
      *  )
      * )
-     * @SWG\Parameter(
-     *  name="rescan",
-     *  in="body",
-     *  @SWG\Schema(
-     *    type="boolean"
-     *  )
-     * )
-     * @SWG\Parameter(
-     *  name="onlyData",
-     *  in="body",
-     *  @SWG\Schema(
-     *    type="boolean"
-     *  )
-     * )
-     * @SWG\Response(
+     * @OA\Response(
      *  response=200,
      *  description="Get a link by its url",
-     *  @SWG\Schema(
+     *  @OA\JsonContent(
      *    type="object",
-     *    @SWG\Property(property="id", type="string"),
-     *    @SWG\Property(property="data", type="object"),
-     *    @SWG\Property(property="url", type="string"),
-     *    @SWG\Property(property="updatedAt", type="integer"),
-     *    @SWG\Property(
+     *    @OA\Property(property="id", type="string"),
+     *    @OA\Property(property="data", type="object"),
+     *    @OA\Property(property="url", type="string"),
+     *    @OA\Property(property="updatedAt", type="integer"),
+     *    @OA\Property(
      *      property="preview",
      *      type="object",
-     *      @SWG\Property(property="id", type="string"),
-     *      @SWG\Property(property="entityType", type="string")
+     *      @OA\Property(property="id", type="string"),
+     *      @OA\Property(property="entityType", type="string")
      *    )
      *  )
      * )
-     * @SWG\Tag(name="link")
+     * @OA\Tag(name="link")
      * @Security(name="api_key")
      */
     public function getLinkByPost(Request $request): Response
@@ -87,29 +83,28 @@ class GetByUrl extends ApiController
 
     /**
      * @Route("/links/by_url", methods={"GET"})
-     * @SWG\Parameter(
+     * @OA\Parameter(
      *  name="url",
      *  in="query",
-     *  type="string"
      * )
-     * @SWG\Response(
+     * @OA\Response(
      *  response=200,
      *  description="Get a link by its url",
-     *  @SWG\Schema(
+     *  @OA\JsonContent(
      *    type="object",
-     *    @SWG\Property(property="id", type="string"),
-     *    @SWG\Property(property="data", type="object"),
-     *    @SWG\Property(property="url", type="string"),
-     *    @SWG\Property(property="updatedAt", type="integer"),
-     *    @SWG\Property(
+     *    @OA\Property(property="id", type="string"),
+     *    @OA\Property(property="data", type="object"),
+     *    @OA\Property(property="url", type="string"),
+     *    @OA\Property(property="updatedAt", type="integer"),
+     *    @OA\Property(
      *      property="preview",
      *      type="object",
-     *      @SWG\Property(property="id", type="string"),
-     *      @SWG\Property(property="entityType", type="string")
+     *      @OA\Property(property="id", type="string"),
+     *      @OA\Property(property="entityType", type="string")
      *    )
      *  )
      * )
-     * @SWG\Tag(name="link")
+     * @OA\Tag(name="link")
      * @Security(name="api_key")
      */
     public function getLinkByGet(Request $request): Response

@@ -3,7 +3,7 @@
     "type": "project",
     "license": "AGPL-3.0-or-later",
     "require": {
-        "php": "~7.2",
+        "php": "~7.3",
         "ext-curl": "*",
         "ext-iconv": "*",
         "ext-imagick": "*",
@@ -15,8 +15,8 @@
         "doctrine/orm": "~2.4",
         "embed/embed": "~3.3",
         "firebase/php-jwt": "~5.0",
-        "guzzlehttp/guzzle": "~6.0",
-        "nelmio/api-doc-bundle": "^3.7",
+        "guzzlehttp/guzzle": "~7.0",
+        "nelmio/api-doc-bundle": "~4.0",
         "nelmio/cors-bundle": "~2.0",
         "sensio/framework-extra-bundle": "~5.0",
         "symfony/asset": "5.*",
@@ -47,7 +47,7 @@
         "symfony/dotenv": "~5.0",
         "symfony/phpunit-bridge": "~5.0",
         "symfony/profiler-pack": "~1.0",
-        "vimeo/psalm": "^3.12"
+        "vimeo/psalm": "~4.0"
     },
     "config": {
         "preferred-install": {

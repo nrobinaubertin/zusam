@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
  * @ORM\Table(name="`group`")
@@ -22,7 +22,7 @@ class Group
      * @ORM\Column(type="guid")
      * @Groups("*")
      * @Assert\NotBlank()
-     * @SWG\Property(type="guid")
+     * @OA\Property(type="guid")
      */
     private $id;
 
@@ -30,7 +30,7 @@ class Group
      * @ORM\Column(type="string", unique=true)
      * @Groups({"read_group"})
      * @Assert\NotBlank()
-     * @SWG\Property(type="string")
+     * @OA\Property(type="string")
      */
     private $secretKey;
 
@@ -38,7 +38,7 @@ class Group
      * @ORM\Column(type="integer")
      * @Assert\Type("integer")
      * @Assert\NotNull()
-     * @SWG\Property(type="integer")
+     * @OA\Property(type="integer")
      */
     private $createdAt;
 
@@ -46,20 +46,20 @@ class Group
      * @ORM\Column(type="string")
      * @Groups("*")
      * @Assert\NotBlank()
-     * @SWG\Property(type="string")
+     * @OA\Property(type="string")
      */
     private $name;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="groups")
      * @Groups({"read_group", "write_group"})
-     * @SWG\Property(type="array", @SWG\Items(type="App\Entity\User"))
+     * @OA\Property(type="array", @OA\Items(type="App\Entity\User"))
      */
     private $users;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="group")
-     * @SWG\Property(type="array", @SWG\Items(type="App\Entity\Message"))
+     * @OA\Property(type="array", @OA\Items(type="App\Entity\Message"))
      */
     private $messages;
 
@@ -67,19 +67,19 @@ class Group
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"read_group", "read_me"})
      * @Assert\Type("integer")
-     * @SWG\Property(type="integer")
+     * @OA\Property(type="integer")
      */
     private $lastActivityDate;
 
     /**
      * @ORM\Column(type="json", nullable=true)
-     * @SWG\Property(type="object")
+     * @OA\Property(type="object")
      */
     private $data;
 
     /**
      * @Groups("*")
-     * @SWG\Property(type="string")
+     * @OA\Property(type="string")
      */
     private $entityType;
 

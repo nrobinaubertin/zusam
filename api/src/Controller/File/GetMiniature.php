@@ -12,20 +12,20 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class GetMiniature extends ApiController
 {
     /**
      * @Route("/images/{type}/{width}/{height}/{id}", methods={"GET"})
-     * @SWG\Response(
+     * @OA\Response(
      *  response=200,
      *  description="Get a miniature of a file",
-     *  @SWG\Schema(
+     *  @OA\Schema(
      *    type="binary",
      *  )
      * )
-     * @SWG\Tag(name="file")
+     * @OA\Tag(name="file")
      * @Security(name="api_key")
      */
     public function index(

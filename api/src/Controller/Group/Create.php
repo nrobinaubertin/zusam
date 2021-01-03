@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class Create extends ApiController
 {
@@ -25,19 +25,21 @@ class Create extends ApiController
 
     /**
      * @Route("/groups", methods={"POST"})
-     * @SWG\Parameter(
-     *  name="name",
-     *  in="body",
-     *  @SWG\Schema(
-     *    type="string",
+     * @OA\RequestBody(
+     *  @OA\Schema(
+     *    type="object",
+     *    @OA\Property(
+     *      property="name",
+     *      type="string"
+     *    ),
      *  )
      * )
-     * @SWG\Response(
+     * @OA\Response(
      *  response=201,
      *  description="Create a group",
      *  @Model(type=App\Entity\Group::class, groups={"read_group"})
      * )
-     * @SWG\Tag(name="group")
+     * @OA\Tag(name="group")
      * @Security(name="api_key")
      */
     public function index(Request $request): Response

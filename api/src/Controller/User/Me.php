@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class Me extends ApiController
 {
@@ -22,12 +22,12 @@ class Me extends ApiController
 
     /**
      * @Route("/me", methods={"GET"})
-     * @SWG\Response(
+     * @OA\Response(
      *  response=200,
      *  description="Returns the current logged in user",
      *  @Model(type=App\Entity\User::class, groups={"read_user", "read_me"})
      * )
-     * @SWG\Tag(name="user")
+     * @OA\Tag(name="user")
      * @Security(name="api_key")
      */
     public function index(): Response

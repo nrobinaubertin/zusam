@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
  * @ORM\Table(name="`message`")
@@ -24,7 +24,7 @@ class Message
      * @ORM\Column(type="guid")
      * @Assert\NotBlank()
      * @Groups("*")
-     * @SWG\Property(type="guid")
+     * @OA\Property(type="guid")
      */
     private $id;
 
@@ -33,7 +33,7 @@ class Message
      * @Assert\Type("integer")
      * @Assert\NotNull()
      * @Groups({"read_message"})
-     * @SWG\Property(type="integer")
+     * @OA\Property(type="integer")
      */
     private $createdAt;
 
@@ -41,21 +41,21 @@ class Message
      * @ORM\Column(type="json", nullable=true)
      * @Assert\NotBlank()
      * @Groups({"read_message", "read_notification"})
-     * @SWG\Property(type="object")
+     * @OA\Property(type="object")
      */
     private $data;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="messages")
      * @Groups("*")
-     * @SWG\Property(type="array", @SWG\Items(type="App\Entity\User"))
+     * @OA\Property(type="array", @OA\Items(type="App\Entity\User"))
      */
     private $author;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Group", inversedBy="messages")
      * @Groups({"read_message"})
-     * @SWG\Property(type="App\Entity\Group")
+     * @OA\Property(type="App\Entity\Group")
      */
     private $group;
 
@@ -63,15 +63,15 @@ class Message
      * @ORM\ManyToOne(targetEntity="App\Entity\Message", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      * @Groups({"read_message"})
-     * @SWG\Property(type="App\Entity\Message")
-     * @SWG\Property(type="array", @SWG\Items(type="App\Entity\Message"))
+     * @OA\Property(type="App\Entity\Message")
+     * @OA\Property(type="array", @OA\Items(type="App\Entity\Message"))
      */
     private $parent;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="parent")
      * @Groups({"read_message"})
-     * @SWG\Property(type="array", @SWG\Items(type="App\Entity\Message"))
+     * @OA\Property(type="array", @OA\Items(type="App\Entity\Message"))
      */
     private $children;
 
@@ -82,7 +82,7 @@ class Message
      *      inverseJoinColumns={@ORM\JoinColumn(name="file_id", referencedColumnName="id")}
      *      )
      * @Groups({"read_message"})
-     * @SWG\Property(type="array", @SWG\Items(type="App\Entity\File"))
+     * @OA\Property(type="array", @OA\Items(type="App\Entity\File"))
      */
     private $files;
 
@@ -91,7 +91,7 @@ class Message
      * @Assert\Type("integer")
      * @Assert\NotNull()
      * @Groups({"read_message"})
-     * @SWG\Property(type="integer")
+     * @OA\Property(type="integer")
      */
     private $lastActivityDate;
 
@@ -99,14 +99,14 @@ class Message
      * @ORM\ManyToOne(targetEntity="App\Entity\File")
      * @ORM\JoinColumn(name="preview_id", referencedColumnName="id")
      * @Groups({"read_message"})
-     * @SWG\Property(type="App\Entity\File")
+     * @OA\Property(type="App\Entity\File")
      */
     private $preview;
 
     /**
      * @ORM\Column(type="guid", unique=true)
      * @Assert\NotBlank()
-     * @SWG\Property(type="guid")
+     * @OA\Property(type="guid")
      */
     private $secretKey;
 
@@ -114,13 +114,13 @@ class Message
      * @ORM\Column(type="boolean")
      * @Assert\NotNull()
      * @Groups({"read_message"})
-     * @SWG\Property(type="boolean")
+     * @OA\Property(type="boolean")
      */
     private $isInFront;
 
     /**
      * @Groups("*")
-     * @SWG\Property(type="string")
+     * @OA\Property(type="string")
      */
     private $entityType;
 

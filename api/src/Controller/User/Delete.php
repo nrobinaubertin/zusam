@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class Delete extends ApiController
 {
@@ -25,11 +25,11 @@ class Delete extends ApiController
 
     /**
      * @Route("/users/{id}", methods={"DELETE"})
-     * @SWG\Response(
+     * @OA\Response(
      *  response=204,
      *  description="Delete a user",
      * )
-     * @SWG\Tag(name="user")
+     * @OA\Tag(name="user")
      * @Security(name="api_key")
      */
     public function index(string $id): Response

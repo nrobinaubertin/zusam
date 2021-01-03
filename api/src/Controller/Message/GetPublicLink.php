@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class GetPublicLink extends ApiController
 {
@@ -26,14 +26,14 @@ class GetPublicLink extends ApiController
 
     /**
      * @Route("/messages/{id}/get-public-link", methods={"GET"})
-     * @SWG\Response(
+     * @OA\Response(
      *  response=200,
      *  description="Get a message's public link token",
-     *  @SWG\Schema(
+     *  @OA\JsonContent(
      *    type="string",
      *  )
      * )
-     * @SWG\Tag(name="message")
+     * @OA\Tag(name="message")
      * @Security(name="api_key")
      */
     public function index(string $id): Response

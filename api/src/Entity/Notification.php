@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
  * @ORM\Table(name="`notification`")
@@ -28,7 +28,7 @@ class Notification
      * @ORM\Column(type="guid")
      * @Groups({"read_notification"})
      * @Assert\NotBlank()
-     * @SWG\Property(type="guid")
+     * @OA\Property(type="guid")
      */
     private $id;
 
@@ -37,7 +37,7 @@ class Notification
      * @Groups({"read_notification"})
      * @Assert\Type("integer")
      * @Assert\NotNull()
-     * @SWG\Property(type="integer")
+     * @OA\Property(type="integer")
      */
     private $createdAt;
 
@@ -45,21 +45,21 @@ class Notification
      * @ORM\Column(type="string")
      * @Groups({"read_notification"})
      * @Assert\NotBlank()
-     * @SWG\Property(type="string")
+     * @OA\Property(type="string")
      */
     private $type;
 
     /**
      * @ORM\Column(type="guid", unique=true)
      * @Assert\NotBlank()
-     * @SWG\Property(type="guid")
+     * @OA\Property(type="guid")
      */
     private $secretKey;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notifications")
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
-     * @SWG\Property(type="App\Entity\User")
+     * @OA\Property(type="App\Entity\User")
      */
     private $owner;
 
@@ -67,14 +67,14 @@ class Notification
      * @ORM\ManyToOne(targetEntity="App\Entity\File")
      * @ORM\JoinColumn(name="miniature_id", referencedColumnName="id")
      * @Groups({"read_notification"})
-     * @SWG\Property(type="App\Entity\File")
+     * @OA\Property(type="App\Entity\File")
      */
     private $miniature;
 
     /**
      * @ORM\Column(type="string")
      * @Groups({"read_notification"})
-     * @SWG\Property(type="string")
+     * @OA\Property(type="string")
      */
     private $target;
 
@@ -82,7 +82,7 @@ class Notification
      * @ORM\Column(type="json", nullable=true)
      * @Groups({"read_notification"})
      * @Assert\NotBlank()
-     * @SWG\Property(type="object")
+     * @OA\Property(type="object")
      */
     private $data;
 
@@ -90,7 +90,7 @@ class Notification
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(name="from_user_id", referencedColumnName="id")
      * @Groups({"read_notification"})
-     * @SWG\Property(type="App\Entity\User")
+     * @OA\Property(type="App\Entity\User")
      */
     private $fromUser;
 
@@ -98,7 +98,7 @@ class Notification
      * @ORM\ManyToOne(targetEntity="App\Entity\Group")
      * @ORM\JoinColumn(name="from_group_id", referencedColumnName="id")
      * @Groups({"read_notification"})
-     * @SWG\Property(type="App\Entity\Group")
+     * @OA\Property(type="App\Entity\Group")
      */
     private $fromGroup;
 
@@ -106,13 +106,13 @@ class Notification
      * @ORM\ManyToOne(targetEntity="App\Entity\Message")
      * @ORM\JoinColumn(name="from_message_id", referencedColumnName="id")
      * @Groups({"read_notification"})
-     * @SWG\Property(type="App\Entity\Message")
+     * @OA\Property(type="App\Entity\Message")
      */
     private $fromMessage;
 
     /**
      * @Groups({"read_notification"})
-     * @SWG\Property(type="string")
+     * @OA\Property(type="string")
      */
     private $entityType;
 

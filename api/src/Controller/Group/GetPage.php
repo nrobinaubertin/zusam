@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class GetPage extends ApiController
 {
@@ -25,29 +25,29 @@ class GetPage extends ApiController
 
     /**
      * @Route("/groups/{id}/page/{n}", methods={"GET"})
-     * @SWG\Response(
+     * @OA\Response(
      *  response=200,
      *  description="Get a group page",
-     *  @SWG\Schema(
+     *  @OA\JsonContent(
      *    type="object",
-     *    @SWG\Property(
+     *    @OA\Property(
      *      property="messages",
      *      type="array",
-     *      @SWG\Items(
+     *      @OA\Items(
      *        type="object",
-     *        @SWG\Property(property="id", type="string"),
-     *        @SWG\Property(property="entityType", type="string"),
-     *        @SWG\Property(property="data", type="object"),
-     *        @SWG\Property(property="author", type="string"),
-     *        @SWG\Property(property="preview", type="string"),
-     *        @SWG\Property(property="children", type="integer"),
-     *        @SWG\Property(property="lastActivityDate", type="integer"),
+     *        @OA\Property(property="id", type="string"),
+     *        @OA\Property(property="entityType", type="string"),
+     *        @OA\Property(property="data", type="object"),
+     *        @OA\Property(property="author", type="string"),
+     *        @OA\Property(property="preview", type="string"),
+     *        @OA\Property(property="children", type="integer"),
+     *        @OA\Property(property="lastActivityDate", type="integer"),
      *      )
      *    ),
-     *    @SWG\Property(property="totalItems", type="integer"),
+     *    @OA\Property(property="totalItems", type="integer"),
      *  )
      * )
-     * @SWG\Tag(name="message")
+     * @OA\Tag(name="message")
      * @Security(name="api_key")
      */
     public function index(string $id, int $n): Response

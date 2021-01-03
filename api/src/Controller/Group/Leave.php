@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class Leave extends ApiController
 {
@@ -26,12 +26,12 @@ class Leave extends ApiController
 
     /**
      * @Route("/groups/{id}/leave", methods={"POST"})
-     * @SWG\Response(
+     * @OA\Response(
      *  response=200,
      *  description="Leave a group",
      *  @Model(type=App\Entity\Group::class, groups={"read_group"})
      * )
-     * @SWG\Tag(name="group")
+     * @OA\Tag(name="group")
      * @Security(name="api_key")
      */
     public function index(string $id): Response

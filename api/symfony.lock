@@ -89,9 +89,6 @@
     "embed/embed": {
         "version": "v3.4.2"
     },
-    "exsyst/swagger": {
-        "version": "v0.4.1"
-    },
     "felixfbecker/advanced-json-rpc": {
         "version": "v3.1.1"
     },
@@ -230,6 +227,9 @@
     },
     "psr/event-dispatcher": {
         "version": "1.0.0"
+    },
+    "psr/http-client": {
+        "version": "1.0.1"
     },
     "psr/http-message": {
         "version": "1.0.1"
@@ -596,9 +596,6 @@
     },
     "webmozart/assert": {
         "version": "1.9.0"
-    },
-    "webmozart/glob": {
-        "version": "4.1.0"
     },
     "webmozart/path-util": {
         "version": "2.3.0"

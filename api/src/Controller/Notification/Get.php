@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class Get extends ApiController
 {
@@ -24,12 +24,12 @@ class Get extends ApiController
 
     /**
      * @Route("/notifications/{id}", methods={"GET"})
-     * @SWG\Response(
+     * @OA\Response(
      *  response=200,
      *  description="Get a notification",
      *  @Model(type=App\Entity\Notification::class, groups={"read_notification"})
      * )
-     * @SWG\Tag(name="notification")
+     * @OA\Tag(name="notification")
      * @Security(name="api_key")
      */
     public function index(string $id): Response
