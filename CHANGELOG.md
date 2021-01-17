@@ -2,6 +2,30 @@
 
 To upgrade, follow the [upgrade guide](https://github.com/zusam/zusam/blob/master/documentation/update.md).
 
+## [0.4.3] - 2021-01-17
+
+### Log
+- Fix lichess embeds
+- Avoid multiple calls to the endpoint for the same search
+- Fix public link not taking subpath into account
+- Use user submitted createdAt on message creation
+- Change display of video being converted
+- Change icon for the backButton
+- Display notification title on hover
+- Remove hover effect on avatars
+- Increase XL layout threshold
+- Fix bookmark board when some messages are missing
+- Rework options of PreparePreviews command
+- Update API dependencies (fix youtube embeds)
+
+### Remarks
+Minor fix release.  
+You can fix the existing youtube embeds (if some are missing) with the PreparePreviews command.  
+```
+php bin/console zusam:prepare-previews --force --filter=youtube.com
+php bin/console zusam:prepare-previews --force --filter=youtu.be
+```
+
 ## [0.4.2] - 2020-09-06
 
 ### Log
