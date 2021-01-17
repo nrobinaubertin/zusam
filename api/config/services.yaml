@@ -5,6 +5,7 @@ parameters:
   version: '%env(resolve:VERSION)%'
   allow.upload.image: '%env(resolve:ALLOW_IMAGE_UPLOAD)%'
   allow.upload.video: '%env(resolve:ALLOW_VIDEO_UPLOAD)%'
+  allow.upload.pdf: '%env(resolve:ALLOW_PDF_UPLOAD)%'
   allow.email: '%env(resolve:ALLOW_EMAIL)%'
   database_url: '%env(resolve:DATABASE_URL)%'
   binaries.ffmpeg: '%env(resolve:FFMPEG_PATH)%'

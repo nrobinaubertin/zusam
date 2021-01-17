@@ -40,6 +40,7 @@ class Info extends ApiController
       'upload' => [
         'image' => $this->getParameter('allow.upload.image') == 'true' && $has_imagick,
         'video' => $this->getParameter('allow.upload.video') == 'true' && $has_ffmpeg,
+        'pdf' => $this->getParameter('allow.upload.pdf') == 'true',
       ],
       'default_lang' => $this->getParameter('lang'),
       'allow_email' => $this->getParameter('allow.email'),

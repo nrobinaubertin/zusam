@@ -180,6 +180,18 @@ export default class Writer extends Component {
     this.setState({ sending: true });
   }
 
+  inputGenericFile(mimetype) {
+    const input = document.createElement("input");
+    document.body.appendChild(input);
+    input.style.display = "none";
+    input.type = "file";
+    input.accept = mimetype;
+    input.addEventListener("change", event => {
+      this.addFile(event.target.files[0], "generic");
+    });
+    input.click();
+  }
+
   inputVideo() {
     const input = document.createElement("input");
     document.body.appendChild(input);
@@ -368,7 +380,7 @@ export default class Writer extends Component {
           {api?.info?.upload?.image && (
             <button
               class="option"
-              onClick={e => this.inputImages(e)}
+              onClick={() => this.inputImages()}
               title={lang.t("upload_image")}
             >
               <FaIcon family={"regular"} icon={"images"} />
@@ -377,10 +389,19 @@ export default class Writer extends Component {
           {api?.info?.upload?.video && (
             <button
               class="option"
-              onClick={e => this.inputVideo(e)}
+              onClick={() => this.inputVideo()}
               title={lang.t("upload_video")}
             >
               <FaIcon family={"solid"} icon={"film"} />
+            </button>
+          )}
+          {api?.info?.upload?.pdf && (
+            <button
+              class="option"
+              onClick={() => this.inputGenericFile("application/pdf")}
+              title={lang.t("upload_pdf")}
+            >
+              <FaIcon family={"regular"} icon={"file-pdf"} />
             </button>
           )}
           <div class="actions">

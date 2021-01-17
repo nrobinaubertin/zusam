@@ -74,13 +74,26 @@ class Upload extends ApiController
 
             // check if it's an accepted filetype
             // TODO: rework this ugly code
-            if ('image/' != substr($file->getType(), 0, 6) && 'video/' != substr($file->getType(), 0, 6)) {
+
+            // check if mimetype is in accepted list
+            if (
+                !in_array(explode("/", $file->getType())[0], ["image", "video", "audio"])
+                && $file->getType() !== "application/pdf"
+            ) {
                 return new JsonResponse(['error' => 'Unsupported file type'], Response::HTTP_BAD_REQUEST);
             }
+
+            // check if mimetype is currently allowed
             if ('image/' == substr($file->getType(), 0, 6) && $this->getParameter('allow.upload.image') != "true") {
                 return new JsonResponse(['error' => 'Unsupported file type'], Response::HTTP_BAD_REQUEST);
             }
             if ('video/' == substr($file->getType(), 0, 6) && $this->getParameter('allow.upload.video') != "true") {
+                return new JsonResponse(['error' => 'Unsupported file type'], Response::HTTP_BAD_REQUEST);
+            }
+            if ('audio/' == substr($file->getType(), 0, 6) && $this->getParameter('allow.upload.audio') != "true") {
+                return new JsonResponse(['error' => 'Unsupported file type'], Response::HTTP_BAD_REQUEST);
+            }
+            if ('application/pdf' == $file->getType() && $this->getParameter('allow.upload.pdf') != "true") {
                 return new JsonResponse(['error' => 'Unsupported file type'], Response::HTTP_BAD_REQUEST);
             }
 
@@ -99,6 +112,14 @@ class Upload extends ApiController
             // TODO: handle gif correctly, AKA convert them to mp4
             if (
                 'image/gif' == $file->getType()
+                && File::STATUS_READY != $file->getStatus()
+            ) {
+                $file->setStatus(File::STATUS_READY);
+            }
+
+            // don't convert a pdf
+            if (
+                'application/pdf' == $file->getType()
                 && File::STATUS_READY != $file->getStatus()
             ) {
                 $file->setStatus(File::STATUS_READY);
