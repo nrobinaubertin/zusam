@@ -1,4 +1,4 @@
-const ZUSAM_VERSION = "0.4.2";
+const ZUSAM_VERSION = "0.4.3";
 const CACHE_VERSION = "0.3";
 
 const param = {
