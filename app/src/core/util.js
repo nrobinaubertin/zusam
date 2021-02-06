@@ -144,6 +144,11 @@ const util = {
   logout: () => {
     storage.reset();
     window.location.href = window.location.origin;
+  },
+  // Accepts a keydown event and checks if it's enter. Compatibility between browsers
+  // We do it the permissive way
+  is_it_enter: e => {
+    return e.keyCode == 13 || e.keyCode == 10 || e.key == "Enter" || e.key == "↵" || e.code == "Enter";
   }
 };
 export default util;

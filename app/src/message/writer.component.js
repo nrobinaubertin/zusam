@@ -53,7 +53,7 @@ export default class Writer extends Component {
   }
 
   onKeyPress(event, doGenPreview = false) {
-    if (event.ctrlKey && event.key == "Enter") {
+    if (event.ctrlKey && util.is_it_enter(event)) {
       this.sendMessage();
       return;
     }
