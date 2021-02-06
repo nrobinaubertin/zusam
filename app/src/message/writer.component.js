@@ -187,7 +187,7 @@ export default class Writer extends Component {
     input.type = "file";
     input.accept = mimetype;
     input.addEventListener("change", event => {
-      this.addFile(event.target.files[0], "generic");
+      this.addFile(event.target.files[0], mimetype);
     });
     input.click();
   }
@@ -284,6 +284,10 @@ export default class Writer extends Component {
         });
         break;
       case "video":
+        console.log(worker);
+        this.uploadFile(worker.target.id, () => this.removeWorker(workerId));
+        break;
+      case "application/pdf":
         console.log(worker);
         this.uploadFile(worker.target.id, () => this.removeWorker(workerId));
         break;

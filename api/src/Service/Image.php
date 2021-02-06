@@ -77,12 +77,22 @@ class Image
         return $output;
     }
 
+    public static function extractImageFromPdf(string $input, $ghostscriptPath): string
+    {
+        $output = tempnam(sys_get_temp_dir(), 'zusam_temp').'.jpg';
+        exec($ghostscriptPath.' -dBATCH -dNOPAUSE -q -o "'.$output.'" -dFirstPage=1 -dLastPage=1 -r72 -dJPEGQ=100 -sDEVICE=jpeg "'.$input.'"');
+        return $output;
+    }
+
     private function loadResizeImage(string $input, int $w, int $h): \Imagick
     {
         $im = new \Imagick();
         try {
             if (preg_match('/video/', mime_content_type($input))) {
                 $input = $this->extractImageFromVideo($input, $this->params->get('binaries.ffmpeg'));
+            }
+            if (preg_match('/pdf/', mime_content_type($input))) {
+                $input = $this->extractImageFromPdf($input, $this->params->get('binaries.ghostscript'));
             }
             if (is_readable($input)) {
                 // https://secure.php.net/manual/en/imagick.setsize.php#110166
@@ -116,6 +126,9 @@ class Image
             if (is_readable($input)) {
                 if (preg_match('/video/', mime_content_type($input))) {
                     $input = $this->extractImageFromVideo($input, $this->params->get('binaries.ffmpeg'));
+                }
+                if (preg_match('/pdf/', mime_content_type($input))) {
+                    $input = $this->extractImageFromPdf($input, $this->params->get('binaries.ghostscript'));
                 }
 
                 if ($im->readImage($input)) {

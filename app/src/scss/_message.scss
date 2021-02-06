@@ -386,19 +386,19 @@
     font-size: 90%;
 
     .dropdown {
-      position: absolute;
-      bottom: 15px;
-      right: 10px;
-      height: 10px;
-      width: 10px;
-
-      .dropdown-menu.dropdown-options {
         position: absolute;
-        bottom: -20px;
-        top: initial;
-        right: 0;
-        left: initial;
-      }
+        bottom: 15px;
+        right: 10px;
+        height: 10px;
+        width: 10px;
+
+        .dropdown-menu.dropdown-options {
+            position: absolute;
+            bottom: -20px;
+            top: initial;
+            right: 0;
+            left: initial;
+        }
     }
 
     .infos {
@@ -415,5 +415,19 @@
                 color: #000;
             }
         }
+    }
+}
+
+.pdf-outline {
+    border: 1px solid #ddd;
+
+    &::before {
+        content: "pdf";
+        position: absolute;
+        background: #ddd;
+        padding: 0px 6px 2px 6px;
+        font-size: 10px;
+        color: black;
+        right: 0;
     }
 }

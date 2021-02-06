@@ -57,8 +57,13 @@ let nlg = {
         media = document.createElement("video");
         media.setAttribute("controls", true);
         break;
+      case /\.(pdf)$/.test(url):
+        media = document.createElement("iframe");
+        break;
       case /\.(jpg|jpeg|png|bmp|webp|gif|svg)$/.test(url):
       default:
+        // default displays also thumbnails that do not have an extension
+        // TODO: this is a dirty trick
         media = document.createElement("img");
     }
     media.classList.add("nlg-media");
@@ -127,10 +132,14 @@ let nlg = {
       }
       let w = media.tagName == "VIDEO" ? media.videoWidth : media.width;
       let h = media.tagName == "VIDEO" ? media.videoHeight : media.height;
-      let ratio = w / h;
+      let ratio = media.tagName == "IFRAME" ? 9/16 : w / h;
       media.width = Math.min(document.body.clientWidth, w);
       media.height = Math.min(document.body.clientHeight, media.width / ratio);
       media.width = media.height * ratio;
+      if (media.tagName == "IFRAME") {
+        media.height = document.body.clientHeight - 10;
+        media.width = Math.max(document.body.clientWidth - 200, document.body.clientWidth * .8);
+      }
 
       let currentIndex = nlg.list.findIndex(
         e => url === (e.dataset.src || e.src || e.href)
