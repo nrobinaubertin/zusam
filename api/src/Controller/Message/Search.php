@@ -109,11 +109,7 @@ class Search extends ApiController
             "SELECT m FROM App\Entity\Message m"
             ." WHERE m.group = '".$group->getId()."'"
         );
-        $messages = $query->getResult();
-
-        if (empty($messages)) {
-            return new JsonResponse(['error' => 'No Message found'], Response::HTTP_NOT_FOUND);
-        }
+        $messages = $query->iterate();
 
         // flatten the search terms before starting the search
         $flattened_search_terms = array_map(function($e) {
@@ -123,7 +119,8 @@ class Search extends ApiController
         $totalItems = 0;
         $results = [];
         $i = 0;
-        foreach ($messages as $message) {
+        foreach ($messages as $row) {
+            $message = $row[0];
             $i++;
             $data = $message->getData();
             $score = 0;
@@ -136,10 +133,17 @@ class Search extends ApiController
                 $score += 150;
             }
 
-            if (!empty($message->getAuthor())) {
-                if (self::has_term($flattened_search_terms, $message->getAuthor()->getName())) {
+            try {
+                if (
+                    null !== $message->getAuthor()
+                    && self::has_term($flattened_search_terms, $message->getAuthor()->getName())
+                ) {
                     $score += 50;
                 }
+            } catch (Exception $e) {
+                // Just continue without adding anything to the score
+                // This try/catch is necessary because doctrine uses proxy classes
+                // https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/advanced-configuration.html#proxy-objects
             }
 
             $message_links = $message->getUrls();
@@ -158,18 +162,35 @@ class Search extends ApiController
                             $score += 20;
                         }
                     }
+                    // detach from Doctrine, so that it can be Garbage-Collected immediately
+                    $this->em->detach($link);
                 }
             }
 
-            if ($score < 1) {
-                continue;
+            if ($score > 0) {
+                $totalItems++;
+                $previewId = $message->getPreview() ? $message->getPreview()->getId() : '';
+                $authorId = $message->getAuthor() ? $message->getAuthor()->getId() : '';
+                $parentId = $message->getParent() ? $message->getParent()->getId() : '';
+                // check if the parent exists
+                if (null == $this->em->getRepository(Message::class)->findOneById($parentId)) {
+                    $parentId = '';
+                }
+                $results[] = [
+                    'id' => $message->getId(),
+                    'entityType' => $message->getEntityType(),
+                    'data' => $message->getData(),
+                    'author' => $authorId,
+                    'preview' => $previewId,
+                    'parent' => $parentId,
+                    'children' => count($message->getChildren()),
+                    'lastActivityDate' => $message->getLastActivityDate(),
+                    'score' => $score,
+                ];
             }
 
-            $totalItems++;
-            $results[] = [
-                'message' => $message,
-                'score' => $score
-            ];
+            // detach from Doctrine, so that it can be Garbage-Collected immediately
+            $this->em->detach($row[0]);
         }
 
         usort($results, function ($a, $b) {
@@ -179,37 +200,14 @@ class Search extends ApiController
             if ($a['score'] > $b['score']) {
                 return -1;
             }
-            return $a['message']->getLastActivityDate() < $b['message']->getLastActivityDate();
+            return $a['lastActivityDate'] < $b['lastActivityDate'];
         });
 
         // limit returned results
         $results = array_slice($results, 0, 100);
 
-        $page = [];
-        foreach ($results as $res) {
-            $message = $res['message'];
-            $previewId = $message->getPreview() ? $message->getPreview()->getId() : '';
-            $authorId = $message->getAuthor() ? $message->getAuthor()->getId() : '';
-            $parentId = $message->getParent() ? $message->getParent()->getId() : '';
-            // check if the parent exists
-            if (null == $this->em->getRepository(Message::class)->findOneById($parentId)) {
-                $parentId = '';
-            }
-            $page[] = [
-                'id' => $message->getId(),
-                'entityType' => $message->getEntityType(),
-                'data' => $message->getData(),
-                'author' => $authorId,
-                'preview' => $previewId,
-                'parent' => $parentId,
-                'children' => count($message->getChildren()),
-                'lastActivityDate' => $message->getLastActivityDate(),
-                'score' => $score,
-            ];
-        }
-
         $data = [
-            'messages' => $page,
+            'messages' => $results,
             'totalItems' => $totalItems,
             'searchterms' => $search_terms,
         ];
