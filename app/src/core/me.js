@@ -1,5 +1,6 @@
 import http from "./http.js";
 import lang from "./lang.js";
+import alert from "./alert.js";
 
 const me = {
   me: {},
@@ -64,6 +65,7 @@ const me = {
       http.post(`/api/bookmarks/${id}`).then(user => {
         me.me = Object.assign(me.me, user);
         setTimeout(dispatchEvent(new CustomEvent("meStateChange")));
+        alert.add(lang.t("bookmark_added"));
       });
     }
   },
@@ -72,6 +74,7 @@ const me = {
       http.delete(`/api/bookmarks/${id}`).then(user => {
         me.me = Object.assign(me.me, user);
         setTimeout(dispatchEvent(new CustomEvent("meStateChange")));
+        alert.add(lang.t("bookmark_removed"));
       });
     }
   },

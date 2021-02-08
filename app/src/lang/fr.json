@@ -95,5 +95,7 @@
     "bookmarks": "marque-pages",
     "api_key": "Clef d'API",
     "reset_api_key": "Changer votre clef d'API (vous allez être déconnecté)",
-    "video_not_ready": "La vidéo n'est pas encore prête."
+    "video_not_ready": "La vidéo n'est pas encore prête.",
+    "bookmark_added": "Message ajouté aux marque-pages !",
+    "bookmark_removed": "Message supprimé des marque-pages !"
 }
