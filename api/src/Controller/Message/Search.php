@@ -140,7 +140,7 @@ class Search extends ApiController
                 ) {
                     $score += 50;
                 }
-            } catch (Exception $e) {
+            } catch (\Doctrine\ORM\EntityNotFoundException $e) {
                 // Just continue without adding anything to the score
                 // This try/catch is necessary because doctrine uses proxy classes
                 // https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/advanced-configuration.html#proxy-objects
