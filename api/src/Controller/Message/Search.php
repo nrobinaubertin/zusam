@@ -135,7 +135,7 @@ class Search extends ApiController
 
             try {
                 if (
-                    null !== $message->getAuthor()
+                    ! is_null($message->getAuthor()->getId())
                     && self::has_term($flattened_search_terms, $message->getAuthor()->getName())
                 ) {
                     $score += 50;
