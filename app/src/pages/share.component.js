@@ -13,6 +13,7 @@ export default class Share extends Component {
       title: currentUrl.searchParams.get("title") || "",
       text: currentUrl.searchParams.get("text") || "",
       url: currentUrl.searchParams.get("url") || "",
+      parent: currentUrl.searchParams.get("parent") || "",
       files: null
     };
     this.groupSelect = this.groupSelect.bind(this);
@@ -59,7 +60,7 @@ export default class Share extends Component {
     return (
       <article class="mt-2">
         <div class="container">
-          {me.me && me.me.groups.length > 1 && (
+          {!this.state.parent && me.me && me.me.groups.length > 1 && (
             <div class="mb-1">
               <label class="px-1" for="group_share_choice">
                 {lang.t("group_share_choice")}
@@ -77,10 +78,25 @@ export default class Share extends Component {
               </select>
             </div>
           )}
+          {this.state.parent && (
+            <div class="form-group">
+              <label for="apiKey">
+                {lang.t("parent_message")}:{" "}
+              </label>
+              <input
+                type="text"
+                name="parent_message"
+                value={this.state.parent}
+                class="form-control font-size-80"
+                readonly="readonly"
+               />
+            </div>
+          )}
           <Writer
             focus={true}
             group={this.state.group}
             title={this.state.title}
+            parent={this.state.parent}
             text={
               this.state.text || this.state.url
                 ? `${this.state.text  }\n${  this.state.url}`

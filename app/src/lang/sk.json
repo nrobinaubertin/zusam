@@ -97,5 +97,7 @@
     "reset_api_key": "Obnovte kľúč rozhrania API (budete odpojení)",
     "video_not_ready": "Video ešte nie je pripravené",
     "bookmark_added": "Správa pridaná do záložiek !",
-    "bookmark_removed": "Správa bola odstránená zo záložiek !"
+    "bookmark_removed": "Správa bola odstránená zo záložiek !",
+    "parent_message": "Správa rodiča"
+
 }

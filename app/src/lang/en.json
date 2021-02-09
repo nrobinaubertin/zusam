@@ -97,5 +97,6 @@
     "reset_api_key": "Reset the API key (you will be disconnected)",
     "video_not_ready": "Video is not ready yet.",
     "bookmark_added": "Message added to bookmarks !",
-    "bookmark_removed": "Message removed from bookmarks !"
+    "bookmark_removed": "Message removed from bookmarks !",
+    "parent_message": "Parent message"
 }
