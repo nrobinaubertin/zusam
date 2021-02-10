@@ -23,7 +23,6 @@ TODO/
 
 # APP
 /app/node_modules/
-/app/yarn.lock
 /app/.cache
 /app/yarn-error.log
 
