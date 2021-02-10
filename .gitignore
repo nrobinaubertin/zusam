@@ -25,6 +25,7 @@ TODO/
 /app/node_modules/
 /app/.cache
 /app/yarn-error.log
+/app/.parcel-cache/
 
 # PUBLIC
 /public/api/bundles/
@@ -41,3 +42,4 @@ TODO/
 /public/*.ico
 /public/*.woff2
 /public/*.json
+/public/*.webmanifest

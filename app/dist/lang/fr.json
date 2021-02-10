@@ -14,6 +14,7 @@
     "upload_image": "Ajouter des photos",
     "upload_video": "Ajouter des vidéos",
     "upload_music": "Ajouter des musiques",
+    "upload_pdf": "Ajouter un pdf",
     "add_date": "Préciser une date",
     "logout": "Se déconnecter",
     "settings": "Paramètres",
@@ -94,5 +95,8 @@
     "bookmarks": "marque-pages",
     "api_key": "Clef d'API",
     "reset_api_key": "Changer votre clef d'API (vous allez être déconnecté)",
-    "video_not_ready": "La vidéo n'est pas encore prête."
+    "video_not_ready": "La vidéo n'est pas encore prête.",
+    "bookmark_added": "Message ajouté aux marque-pages !",
+    "bookmark_removed": "Message supprimé des marque-pages !",
+    "parent_message": "Message parent"
 }

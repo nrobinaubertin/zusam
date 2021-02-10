@@ -14,6 +14,7 @@
     "upload_image": "Pridať fotografie",
     "upload_video": "Pridať videá",
     "upload_music": "Pridať hudbu",
+    "upload_pdf": "Pridať pdf",
     "add_date": "Pridať dátum",
     "logout": "Odhlásiť",
     "settings": "Nastavenia",
@@ -94,5 +95,9 @@
     "bookmarks": "záložky",
     "api_key": "Kľúč API",
     "reset_api_key": "Obnovte kľúč rozhrania API (budete odpojení)",
-    "video_not_ready": "Video ešte nie je pripravené"
+    "video_not_ready": "Video ešte nie je pripravené",
+    "bookmark_added": "Správa pridaná do záložiek !",
+    "bookmark_removed": "Správa bola odstránená zo záložiek !",
+    "parent_message": "Správa rodiča"
+
 }

@@ -14,6 +14,7 @@
     "upload_image": "Añadir fotos",
     "upload_video": "Añadir videos",
     "upload_music": "Añadir música",
+    "upload_pdf": "Añadir pdf",
     "add_date": "Añadir una fecha",
     "logout": "Desconectarse",
     "settings": "Parámetros",
@@ -94,5 +95,9 @@
     "bookmarks": "marcadores",
     "api_key": "Clave API",
     "reset_api_key": "Restablecer la clave API (se desconectará)",
-    "video_not_ready": "El video aún no está listo"
+    "video_not_ready": "El video aún no está listo",
+    "bookmark_added": "Mensaje agregado a marcadores !",
+    "bookmark_removed": "Mensaje eliminado de los marcadores !",
+    "parent_message": "Mensaje para padres"
+
 }

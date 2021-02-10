@@ -14,6 +14,7 @@
     "upload_image": "Add photos",
     "upload_video": "Add videos",
     "upload_music": "Add musics",
+    "upload_pdf": "Add pdf",
     "add_date": "Add a date",
     "logout": "Logout",
     "settings": "Settings",
@@ -94,5 +95,8 @@
     "bookmarks": "bookmarks",
     "api_key": "API key",
     "reset_api_key": "Reset the API key (you will be disconnected)",
-    "video_not_ready": "Video is not ready yet."
+    "video_not_ready": "Video is not ready yet.",
+    "bookmark_added": "Message added to bookmarks !",
+    "bookmark_removed": "Message removed from bookmarks !",
+    "parent_message": "Parent message"
 }
