@@ -52,7 +52,7 @@ export default class FileGrid extends Component {
             <div class="spinner orange-spinner">
               <div /><div /><div /><div /><div />
             </div>
-            { file?.progress > 0 && (
+            { file && file.progress > 0 && (
               <div class="progress-bar">
                 <div style={{ width: `${file.progress}%` }} />
               </div>

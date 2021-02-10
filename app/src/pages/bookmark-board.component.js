@@ -15,9 +15,11 @@ export default class BookmarkBoard extends Component {
   }
 
   loadBookmarks() {
-    Promise.all(me.me.data?.bookmarks?.map(bid => {
-      return http.get(`/api/messages/${bid}`);
-    })).then(messages => this.setState({messages}));
+    if (me.me && me.me.data && Array.isArray(me.me.data.bookmarks)) {
+      Promise.all(me.me.data.bookmarks.map(bid => {
+        return http.get(`/api/messages/${bid}`);
+      })).then(messages => this.setState({messages}));
+    }
   }
 
   componentDidMount() {

@@ -86,7 +86,7 @@ const router = {
     Object.assign(router, components);
 
     // set url, backUrl and entityUrl
-    if (router.id && router.isEntity(router?.route)) {
+    if (router.id && router.isEntity(router.route)) {
       router.entityUrl = `/api/${router.route}/${router.id}`;
       router.entityType = router.route;
 

@@ -247,7 +247,7 @@ export default class Writer extends Component {
       return;
     }
     let target = this.state.files.find(
-      e => !this.state.workers.map(w => w.target?.id).includes(e.id) && e?.status == 'initial'
+      e => !this.state.workers.map(w => w.target && w.target.id).includes(e.id) && e.status == 'initial'
     );
     if (target) {
       let worker = {
@@ -303,7 +303,7 @@ export default class Writer extends Component {
     const formData = new FormData();
     let file = this.state.files.find(e => e.id == fileId);
     console.log(file);
-    if (!file?.inputFile) {
+    if (!file || !file.inputFile) {
       // TODO handle this properly
       console.error(this.state, file, fileId);
       throw "error";
@@ -381,7 +381,7 @@ export default class Writer extends Component {
           />
         )}
         <div class="options">
-          {api?.info?.upload?.image && (
+          {api && api.info && api.info.upload && api.info.upload.image && (
             <button
               class="option"
               onClick={() => this.inputImages()}
@@ -390,7 +390,7 @@ export default class Writer extends Component {
               <FaIcon family={"regular"} icon={"images"} />
             </button>
           )}
-          {api?.info?.upload?.video && (
+          {api && api.info && api.info.upload && api.info.upload.video && (
             <button
               class="option"
               onClick={() => this.inputVideo()}
@@ -399,7 +399,7 @@ export default class Writer extends Component {
               <FaIcon family={"solid"} icon={"film"} />
             </button>
           )}
-          {api?.info?.upload?.pdf && (
+          {api && api.info && api.info.upload && api.info.upload.pdf && (
             <button
               class="option"
               onClick={() => this.inputGenericFile("application/pdf")}

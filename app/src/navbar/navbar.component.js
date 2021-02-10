@@ -45,7 +45,7 @@ export default class Navbar extends Component {
                   />
                 </div>
                 <div class="dropdown-menu dropdown-right">
-                  { me.me.data?.bookmarks?.length && (
+                  { me.me && me.me.data && Array.isArray(me.me.data.bookmarks) && me.me.data.bookmarks.length && (
                     <a
                       class="d-block seamless-link capitalize"
                       href={router.toApp("/bookmarks")}

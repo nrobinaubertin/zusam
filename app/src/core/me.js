@@ -58,7 +58,10 @@ const me = {
     });
   },
   hasBookmark: id => {
-    return Array.isArray(me.me?.data?.bookmarks) ? me.me.data.bookmarks.some(bid => bid === id) : false;
+    if (me.me && me.me.data && Array.isArray(me.me.data.bookmarks)) {
+      return me.me.data.bookmarks.some(bid => bid === id);
+    }
+    return false;
   },
   addBookmark: id => {
     if (!me.hasBookmark(id)) {

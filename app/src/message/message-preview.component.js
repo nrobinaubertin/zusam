@@ -11,7 +11,7 @@ export default class MessagePreview extends Component {
   }
 
   componentDidMount() {
-    if (this.props.message?.author) {
+    if (this.props.message && this.props.message.author) {
       if (typeof(this.props.message.author) == "string") {
         http
           .get(`/api/users/${this.props.message.author}`)
@@ -29,7 +29,7 @@ export default class MessagePreview extends Component {
         className={`avatar material-shadow${user ? "" : " removed-user"}`}
         style={util.backgroundHash(user ? user.id : "")}
         src={
-          user?.avatar
+          user && user.avatar
             ? util.crop(user.avatar["id"], 100, 100)
             : util.defaultAvatar
         }

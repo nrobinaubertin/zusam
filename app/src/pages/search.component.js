@@ -11,7 +11,7 @@ export default class Search extends Component {
   search(evt) {
     evt.preventDefault();
     let group_id =
-    router.route == "messages" ? router.entity?.group?.id : router.entity?.id;
+    router.route == "messages" ? router.entity && router.entity.group && router.entity.group.id : router.entity && router.entity.id;
     // https://stackoverflow.com/a/37511463
     let searchTerms = document
       .getElementById("search")
@@ -24,7 +24,15 @@ export default class Search extends Component {
   }
 
   render() {
-    if (router.entity?.group?.id || router.entity?.id) {
+    let entityId = null;
+    if (router.entity) {
+      if (router.entity.group && router.entity.group.id) {
+        entityId = router.entity.group.id;
+      } else {
+        entityId = router.entity.id;
+      }
+    }
+    if (entityId) {
       return (
         <form class="navbar-block search-block" onSubmit={e => this.search(e)}>
           <div class="input-group">
