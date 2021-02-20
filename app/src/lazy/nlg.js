@@ -119,10 +119,10 @@ let nlg = {
       }
       if (e.dataset["origin"]) {
         let downloadBtn = document.createElement("a");
-        downloadBtn.id = "nlg-origin";
+        downloadBtn.id = "nlg-download";
         downloadBtn.href = e.dataset.origin;
         downloadBtn.target = "_blank";
-        downloadBtn.innerHTML = `&#128229`;
+        downloadBtn.innerHTML = `&#8615;`;
         downloadBtn.download = (new URL(e.dataset.origin)).pathname.split("/").slice(-1);
         document.body.appendChild(downloadBtn);
       }
@@ -200,8 +200,8 @@ let nlg = {
       window.removeEventListener("keydown", nlg.keyPressLeft);
       document.body.style.cssText = nlg.bodyStyle;
       document.getElementById("nlg-modal").outerHTML = "";
-      if (document.getElementById("nlg-origin")) {
-        document.getElementById("nlg-origin").outerHTML = "";
+      if (document.getElementById("nlg-download")) {
+        document.getElementById("nlg-download").outerHTML = "";
       }
       if (keepBackground != true) {
         (document.querySelector("#nlg-close") || {}).outerHTML = "";
