@@ -53,6 +53,9 @@ class App extends Component {
         router.sync();
       } else {
         // redirect to login if we don't have an apiKey
+        //  log this so that we can later remove a falsy behavior
+        //  We don't want to logout the user if the network is slow
+        console.warn("No API key");
         router.navigate("/login");
       }
     });
@@ -77,6 +80,8 @@ class App extends Component {
       if (apiKey && router.route != "login") {
         me.get().then(user => {
           if (!user && !router.isOutside()) {
+            // let's log this so we can later know what causes disconnects when the network is slow
+            console.warn("No user data => logout.");
             storage.set("apiKey", "").then(() => router.navigate("/login"));
           } else {
             this.setState({
@@ -89,6 +94,8 @@ class App extends Component {
           }
         });
       } else if (!router.isOutside()) {
+            // let's log this so we can later know what causes disconnects when the network is slow
+            console.warn("No API key => logout.");
           router.navigate("/login");
         }
     });
