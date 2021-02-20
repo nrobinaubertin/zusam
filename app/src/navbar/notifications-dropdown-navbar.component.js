@@ -23,8 +23,7 @@ export default class NotificationsDropdownNavbar extends Component {
     return (
       <div
         className={
-          `menu dropdown${ 
-          me.me.notifications.length ? " cursor-pointer" : ""}`
+          `menu dropdown${me.me.notifications && me.me.notifications.length ? " cursor-pointer" : ""}`
         }
         title={lang.t('notifications')}
         tabindex="-1"
