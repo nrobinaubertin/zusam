@@ -94,12 +94,16 @@ export default class EmbedBlock extends Component {
             />
           );
         case "twitch.tv":
-          return (
-            <TwitchEmbed
-              preview={this.props.preview}
-              url={this.props.data["url"]}
-            />
-          );
+          let splits = this.props.data["url"].split('/');
+          if (splits.length > 4 && splits[4]) {
+            return (
+              <TwitchEmbed
+                preview={this.props.preview}
+                url={this.props.data["url"]}
+              />
+            );
+          }
+          break;
         case "bandcamp.com":
           if (this.props.data["code"]) {
             let id = this.props.data["code"].match(/https:\/\/.*album=\d+/);

@@ -1,32 +1,20 @@
 import { h } from "preact";
 import { router } from "/core";
 
-export default function TwitchEmbed() {
-  let embedUrl = "";
-  const splits = this.props.url.split("/");
-  const t = router.getParam("t", this.props.url.split("?")[1]);
-  switch (splits[2]) {
-    case "www.twitch.tv":
-      if (splits.length > 5 && splits[4] == "clip") {
-        embedUrl =
-          `https://clips.twitch.tv/embed?clip=${ 
-            splits[5].replace(/\?.*$/, "") 
-            }&autoplay=false`;
-      } else {
-        embedUrl =
-          `https://player.twitch.tv/?video=${ 
-            splits[4].replace(/\?.*$/, "") 
-            }&autoplay=false${ 
-            t ? `&t=${  t}` : ""}`;
-      }
-      break;
-    case "clips.twitch.tv":
-      embedUrl =
-        `https://clips.twitch.tv/embed?clip=${ 
-          splits[3].replace(/\?.*$/, "") 
-          }&autoplay=false`;
-      break;
+function getEmbedUrl(url) {
+  const splits = url.split("/");
+  const t = router.getParam("t", url.split("?")[1]);
+  if (splits.length > 5 && splits[4] == "clip") {
+    return `https://clips.twitch.tv/embed?clip=${splits[5].replace(/\?.*$/, "")}&autoplay=false`;
   }
+  if (splits.length > 4 && splits[4]) {
+     return `https://player.twitch.tv/?video=${splits[4].replace(/\?.*$/, "")}&autoplay=false${t ? `&t=${t}` : ""}`;
+  }
+  return url;
+}
+
+export default function TwitchEmbed() {
+  let embedUrl = getEmbedUrl(this.props.url);
   return (
     <div class="embed-responsive embed-responsive-16by9">
       <iframe
